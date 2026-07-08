@@ -25,9 +25,9 @@
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       background: #000;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     body,
@@ -36,10 +36,13 @@
       font-family: "KIKOPro", Arial, sans-serif;
     }
 
-    .kiko-page {
+    .kiko-camera-page {
       width: 100vw;
-      height: 100vh;
-      background: #000;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 34% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 22%, transparent 44%),
+        radial-gradient(circle at 78% 92%, rgba(210, 210, 210, 0.07) 0%, transparent 34%),
+        #000;
       color: #fff;
       overflow: hidden;
       position: relative;
@@ -108,23 +111,106 @@
       transform-origin: center center;
     }
 
-    .kiko-stage {
-      width: 100%;
-      height: calc(100vh - clamp(92px, 9.6vw, 104px));
+    .kiko-camera-hero {
+      min-height: calc(100vh - clamp(92px, 9.6vw, 104px));
+      display: grid;
+      grid-template-columns: minmax(300px, 0.9fr) minmax(390px, 1.1fr);
+      align-items: center;
+      gap: 30px;
+      padding: 0 58px 28px;
       position: relative;
-      overflow: hidden;
+    }
+
+    .kiko-camera-left {
+      height: 100%;
+      min-height: 500px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 5;
+      padding-bottom: 8px;
+    }
+
+    .kiko-camera-glow {
+      position: absolute;
+      width: 350px;
+      height: 420px;
+      border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.08) 0%, transparent 42%),
-        #000;
+        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 30%, transparent 66%);
+      filter: blur(18px);
+      opacity: 0.72;
+      animation: kikoCameraGlow 5.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .kiko-camera-mirror-frame {
+      width: 305px;
+      height: 405px;
+      border-radius: 50%;
+      padding: 19px;
+      position: relative;
+      z-index: 10;
+      background:
+        radial-gradient(circle at 28% 16%, #fff7b8 0%, #d99d24 12%, #6f4106 26%, #f7d76d 39%, #8b5607 51%, #fff1a5 66%, #9a610b 78%, #f7cf5d 100%);
+      box-shadow:
+        0 24px 54px rgba(0, 0, 0, 0.72),
+        inset 0 0 0 3px rgba(255, 255, 255, 0.25),
+        inset 0 0 24px rgba(40, 20, 0, 0.65);
+      animation: kikoMirrorFloat 5.2s ease-in-out infinite;
+    }
+
+    .kiko-camera-mirror-frame::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      border: 3px double rgba(255, 235, 150, 0.82);
+      pointer-events: none;
+      z-index: 7;
+    }
+
+    .kiko-camera-mirror-frame::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(77, 43, 0, 0.65);
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .kiko-camera-video-wrap {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #111;
+      position: relative;
+      box-shadow:
+        inset 0 0 28px rgba(0, 0, 0, 0.72),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.18);
+    }
+
+    .kiko-camera-video-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(118deg, rgba(255, 255, 255, 0.14) 0%, transparent 28%, transparent 68%, rgba(255, 255, 255, 0.05) 100%);
+      pointer-events: none;
+      z-index: 9;
     }
 
     #deepar-preview {
       position: absolute;
       inset: 0;
+      z-index: 3;
       width: 100%;
       height: 100%;
       background: #000;
-      z-index: 1;
       overflow: hidden;
       transform: scaleX(-1);
     }
@@ -140,17 +226,18 @@
     .kiko-loading {
       position: absolute;
       inset: 0;
-      z-index: 8;
-      background: #000;
+      z-index: 12;
+      background: rgba(0, 0, 0, 0.92);
       color: rgba(255, 255, 255, 0.92);
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 30px;
-      font-size: 18px;
+      padding: 24px;
+      font-size: 15px;
       line-height: 1.45;
       letter-spacing: 0.03em;
+      border-radius: 50%;
     }
 
     .kiko-loading.is-hidden {
@@ -160,129 +247,225 @@
     .kiko-error {
       position: absolute;
       inset: 0;
-      z-index: 9;
-      background: #000;
+      z-index: 13;
+      background: rgba(0, 0, 0, 0.94);
       color: #fff;
       display: none;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 28px;
+      padding: 24px;
       line-height: 1.45;
-      font-size: 16px;
+      font-size: 13px;
+      border-radius: 50%;
     }
 
     .kiko-error.is-visible {
       display: flex;
     }
 
-    .kiko-bottom {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 6;
-      padding: 24px 18px 30px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0));
-      display: flex;
-      flex-direction: column;
+    .kiko-look-controls {
+      width: 330px;
+      max-width: 90vw;
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
       align-items: center;
       gap: 14px;
-      pointer-events: none;
+      position: relative;
+      z-index: 12;
     }
 
-    .kiko-look-title {
+    .kiko-look-arrow {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.3px solid rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.04);
       color: #fff;
-      font-size: 18px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-align: center;
-      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
-    }
-
-    .kiko-controls {
-      width: min(92vw, 760px);
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      gap: 12px;
-      pointer-events: auto;
-    }
-
-    .kiko-look-btn {
-      min-height: 48px;
-      padding: 0 18px;
-      border: 1.5px solid rgba(255, 255, 255, 0.92);
-      background: rgba(0, 0, 0, 0.44);
-      color: #fff;
-      border-radius: 999px;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 42px;
+      line-height: 1;
       cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 7px;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.12);
       appearance: none;
       -webkit-appearance: none;
-      white-space: nowrap;
     }
 
-    .kiko-look-btn.is-active {
+    .kiko-look-arrow:hover {
       background: #fff;
       color: #000;
-      transform: scale(1.04);
+      transform: translateY(-1px);
     }
 
-    .kiko-start-btn {
-      width: min(330px, 92vw);
-      min-height: 56px;
-      border: 2px solid rgba(255, 154, 204, 0.9);
+    .kiko-look-info {
+      text-align: center;
+      min-height: 54px;
+    }
+
+    .kiko-look-name {
+      font-size: 16px;
+      letter-spacing: 0.15em;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .kiko-look-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .kiko-look-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: block;
+      background: rgba(255, 255, 255, 0.42);
+      transition:
+        background 220ms ease,
+        transform 220ms ease;
+    }
+
+    .kiko-look-dots span.is-active {
+      background: #fff;
+      transform: scale(1.18);
+    }
+
+    .kiko-camera-right {
+      position: relative;
+      z-index: 10;
+      max-width: 610px;
+      text-align: center;
+      justify-self: center;
+      transform: translateY(-4px);
+    }
+
+    .kiko-script-title {
+      font-size: clamp(36px, 3.5vw, 54px);
+      line-height: 0.95;
+      color: #fff;
+      margin-bottom: 6px;
+      font-weight: 400;
+      opacity: 0.92;
+    }
+
+    .kiko-camera-right h1 {
+      margin: 0;
+      font-size: clamp(50px, 5vw, 78px);
+      line-height: 0.95;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+    }
+
+    .kiko-title-line {
+      width: 54px;
+      height: 2.5px;
+      background: #ff9acc;
+      margin: 24px auto 24px;
+    }
+
+    .kiko-main-copy {
+      margin: 0 auto 14px;
+      max-width: 500px;
+      font-size: 18px;
+      line-height: 1.42;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .kiko-sub-copy {
+      margin: 0 auto 28px;
+      max-width: 525px;
+      font-size: 18px;
+      line-height: 1.42;
+      color: #ff9acc;
+    }
+
+    .kiko-start-quiz-btn {
+      width: 330px;
+      max-width: 90%;
+      min-height: 58px;
+      border: 2px solid rgba(255, 154, 204, 0.82);
       border-radius: 0;
       background: #fff;
       color: #000;
-      font-size: 16px;
-      letter-spacing: 0.1em;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
       cursor: pointer;
+      box-shadow:
+        0 0 12px rgba(255, 143, 205, 0.24),
+        inset 0 0 0 2px rgba(0, 0, 0, 0.08);
+      position: relative;
+      z-index: 99999;
       pointer-events: auto;
       appearance: none;
       -webkit-appearance: none;
+      transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        background 220ms ease;
     }
 
-    .kiko-start-btn:hover {
+    .kiko-start-quiz-btn:hover,
+    .kiko-start-quiz-btn.is-selected {
+      transform: translateY(-1px);
       background: #f2f2f2;
       color: #000;
     }
 
-    @media (max-width: 768px) {
-      .kiko-brand-header {
-        height: 94px;
+    @keyframes kikoCameraGlow {
+      0%, 100% {
+        transform: scale(0.96) translateY(0);
+        opacity: 0.58;
       }
 
-      .kiko-brand-logo-bar,
-      .kiko-brand-logo-wrap {
-        height: 72px;
+      50% {
+        transform: scale(1.08) translateY(-12px);
+        opacity: 0.82;
+      }
+    }
+
+    @keyframes kikoMirrorFloat {
+      0%, 100% {
+        transform: translateY(0);
       }
 
-      .kiko-brand-logo-img {
-        width: clamp(150px, 30vw, 220px);
-        transform: translateY(-4px) scale(0.58);
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .kiko-camera-page {
+        overflow: visible;
       }
 
-      .kiko-stage {
-        height: calc(100vh - 94px);
+      .kiko-camera-hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        padding: 10px 28px 28px;
+        gap: 24px;
       }
 
-      .kiko-controls {
-        width: 94vw;
-        gap: 8px;
+      .kiko-camera-right {
+        order: 1;
       }
 
-      .kiko-look-btn {
-        min-height: 44px;
-        padding: 0 10px;
-        font-size: 10px;
-        letter-spacing: 0.06em;
+      .kiko-camera-left {
+        order: 2;
+        height: auto;
+        min-height: 500px;
       }
     }
 
@@ -308,58 +491,88 @@
         transform: translateY(-3px) scale(0.58);
       }
 
-      .kiko-stage {
-        height: calc(100vh - 86px);
+      .kiko-camera-hero {
+        padding: 8px 18px 26px;
+        gap: 20px;
       }
 
-      .kiko-bottom {
-        padding: 20px 12px 24px;
-        gap: 12px;
+      .kiko-script-title {
+        font-size: 34px;
       }
 
-      .kiko-look-title {
-        font-size: 14px;
+      .kiko-camera-right h1 {
+        font-size: 42px;
       }
 
-      .kiko-controls {
-        width: 96vw;
-        gap: 7px;
+      .kiko-title-line {
+        margin: 20px auto 20px;
       }
 
-      .kiko-look-btn {
-        min-height: 42px;
-        padding: 0 8px;
-        font-size: 9px;
-        letter-spacing: 0.04em;
+      .kiko-main-copy,
+      .kiko-sub-copy {
+        font-size: 15px;
+        line-height: 1.42;
       }
 
-      .kiko-start-btn {
-        min-height: 52px;
-        font-size: 14px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .kiko-nxtgen-img {
-        height: 18px;
-        max-width: 108px;
+      .kiko-sub-copy {
+        margin-bottom: 22px;
       }
 
-      .kiko-brand-logo-img {
-        width: 165px;
-        transform: translateY(-3px) scale(0.58);
+      .kiko-start-quiz-btn {
+        width: 100%;
+        min-height: 56px;
+        font-size: 16px;
       }
 
-      .kiko-look-btn {
-        padding: 0 6px;
-        font-size: 8px;
+      .kiko-camera-left {
+        min-height: 430px;
+      }
+
+      .kiko-camera-mirror-frame {
+        width: 245px;
+        height: 325px;
+        padding: 16px;
+      }
+
+      .kiko-look-controls {
+        width: 285px;
+        grid-template-columns: 44px 1fr 44px;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .kiko-look-arrow {
+        width: 44px;
+        height: 44px;
+        font-size: 38px;
+        padding-bottom: 6px;
+      }
+
+      .kiko-look-name {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+      }
+
+      .kiko-look-dots span {
+        width: 8px;
+        height: 8px;
+      }
+
+      .kiko-loading {
+        font-size: 12px;
+        padding: 20px;
+      }
+
+      .kiko-error {
+        font-size: 11px;
+        padding: 20px;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="kiko-page">
+  <div class="kiko-camera-page">
     <header class="kiko-brand-header">
       <div class="kiko-brand-top-strip">
         <img
@@ -380,54 +593,65 @@
       </div>
     </header>
 
-    <main class="kiko-stage">
-      <div id="deepar-preview"></div>
+    <section class="kiko-camera-hero">
+      <div class="kiko-camera-left">
+        <div class="kiko-camera-glow"></div>
 
-      <div id="kikoLoading" class="kiko-loading">
-        Opening camera and loading your KIKO look...
-      </div>
+        <div class="kiko-camera-mirror-frame">
+          <div class="kiko-camera-video-wrap">
+            <div id="deepar-preview"></div>
 
-      <div id="kikoError" class="kiko-error">
-        Camera could not start. Please check camera permission, refresh the page, and try again.
-      </div>
+            <div id="kikoLoading" class="kiko-loading">
+              Opening camera and loading your KIKO look...
+            </div>
 
-      <div class="kiko-bottom">
-        <div id="kikoLookTitle" class="kiko-look-title">Natural Glow</div>
-
-        <div class="kiko-controls">
-          <button
-            class="kiko-look-btn is-active"
-            type="button"
-            data-look="Natural Glow"
-            data-preset="makeup/caramel-kiss.zip"
-          >
-            Natural Glow
-          </button>
-
-          <button
-            class="kiko-look-btn"
-            type="button"
-            data-look="Everyday Soft Glam"
-            data-preset="makeup/kim-classic.zip"
-          >
-            Everyday Soft Glam
-          </button>
-
-          <button
-            class="kiko-look-btn"
-            type="button"
-            data-look="Bold Glam"
-            data-preset="makeup/night-out.zip"
-          >
-            Bold Glam
-          </button>
+            <div id="kikoError" class="kiko-error">
+              Camera could not start. Please check camera permission, refresh the page, and try again.
+            </div>
+          </div>
         </div>
 
-        <button class="kiko-start-btn" type="button" id="kikoStartQuizBtn">
+        <div class="kiko-look-controls">
+          <button class="kiko-look-arrow kiko-look-prev" type="button" id="kikoPrevLook" aria-label="Previous look">
+            ‹
+          </button>
+
+          <div class="kiko-look-info">
+            <div id="kikoLookName" class="kiko-look-name">NATURAL GLOW</div>
+
+            <div id="kikoLookDots" class="kiko-look-dots">
+              <span class="is-active"></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <button class="kiko-look-arrow kiko-look-next" type="button" id="kikoNextLook" aria-label="Next look">
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div class="kiko-camera-right">
+        <div class="kiko-script-title">Try Your</div>
+
+        <h1>KIKO LOOK</h1>
+
+        <div class="kiko-title-line"></div>
+
+        <p class="kiko-main-copy">
+          Swipe through beauty looks and find your favourite style before you start.
+        </p>
+
+        <p class="kiko-sub-copy">
+          Then take the quiz to help bring a free KIKO Milano masterclass to your campus.
+        </p>
+
+        <button class="kiko-start-quiz-btn" type="button" id="kikoStartQuizBtn">
           START THE QUIZ
         </button>
       </div>
-    </main>
+    </section>
   </div>
 
   <script type="module">
@@ -435,17 +659,38 @@
 
     let deepARInstance = null;
     let beautyInstance = null;
+    let currentLookIndex = 0;
     let selectedKikoLook = "Natural Glow";
     let isChangingLook = false;
 
     const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
     const BEAUTY_LIBRARY_PATH = "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/";
 
+    const kikoLooks = [
+      {
+        name: "NATURAL GLOW",
+        messageName: "Natural Glow",
+        preset: "makeup/caramel-kiss.zip"
+      },
+      {
+        name: "EVERYDAY SOFT GLAM",
+        messageName: "Everyday Soft Glam",
+        preset: "makeup/kim-classic.zip"
+      },
+      {
+        name: "BOLD GLAM",
+        messageName: "Bold Glam",
+        preset: "makeup/night-out.zip"
+      }
+    ];
+
     const loadingEl = document.getElementById("kikoLoading");
     const errorEl = document.getElementById("kikoError");
-    const titleEl = document.getElementById("kikoLookTitle");
     const previewEl = document.getElementById("deepar-preview");
-    const lookButtons = Array.from(document.querySelectorAll(".kiko-look-btn"));
+    const lookNameEl = document.getElementById("kikoLookName");
+    const lookDots = Array.from(document.querySelectorAll("#kikoLookDots span"));
+    const prevLookBtn = document.getElementById("kikoPrevLook");
+    const nextLookBtn = document.getElementById("kikoNextLook");
     const startQuizBtn = document.getElementById("kikoStartQuizBtn");
 
     function hideLoading() {
@@ -470,18 +715,46 @@
       errorEl.classList.add("is-visible");
     }
 
-    async function applyBeautyPreset(presetPath, lookName) {
-      if (!beautyInstance || !presetPath) {
+    function updateLookUI() {
+      const look = kikoLooks[currentLookIndex];
+
+      selectedKikoLook = look.messageName;
+
+      if (lookNameEl) {
+        lookNameEl.textContent = look.name;
+      }
+
+      lookDots.forEach(function(dot, index) {
+        if (index === currentLookIndex) {
+          dot.classList.add("is-active");
+        } else {
+          dot.classList.remove("is-active");
+        }
+      });
+    }
+
+    async function applyBeautyPresetByIndex(index) {
+      if (!beautyInstance || isChangingLook) {
         return;
       }
 
-      await beautyInstance.reset();
-      await beautyInstance.importPreset(presetPath);
+      isChangingLook = true;
+      currentLookIndex = (index + kikoLooks.length) % kikoLooks.length;
 
-      selectedKikoLook = lookName || "Natural Glow";
+      const look = kikoLooks[currentLookIndex];
 
-      if (titleEl) {
-        titleEl.textContent = selectedKikoLook;
+      updateLookUI();
+
+      try {
+        showLoading("Loading " + look.name + "...");
+        await beautyInstance.reset();
+        await beautyInstance.importPreset(look.preset);
+        hideLoading();
+      } catch (error) {
+        console.error("Could not switch DeepAR Beauty preset:", error);
+        showError("This KIKO look could not load. Open Console and send the red error text.");
+      } finally {
+        isChangingLook = false;
       }
     }
 
@@ -502,12 +775,11 @@
           BEAUTY_LIBRARY_PATH
         );
 
-        const firstButton = document.querySelector(".kiko-look-btn.is-active");
-        const firstPreset = firstButton.getAttribute("data-preset");
-        const firstLook = firstButton.getAttribute("data-look");
+        updateLookUI();
 
-        showLoading("Loading Natural Glow...");
-        await applyBeautyPreset(firstPreset, firstLook);
+        showLoading("Loading NATURAL GLOW...");
+        await beautyInstance.reset();
+        await beautyInstance.importPreset(kikoLooks[0].preset);
 
         hideLoading();
       } catch (error) {
@@ -516,43 +788,19 @@
       }
     }
 
-    async function changeKikoLook(button) {
-      if (!button || !beautyInstance || isChangingLook) {
-        return;
-      }
+    prevLookBtn.addEventListener("click", function() {
+      applyBeautyPresetByIndex(currentLookIndex - 1);
+    });
 
-      isChangingLook = true;
-
-      const presetPath = button.getAttribute("data-preset");
-      const lookName = button.getAttribute("data-look");
-
-      lookButtons.forEach(function(btn) {
-        btn.classList.remove("is-active");
-      });
-
-      button.classList.add("is-active");
-
-      try {
-        showLoading("Loading " + lookName + "...");
-        await applyBeautyPreset(presetPath, lookName);
-        hideLoading();
-      } catch (error) {
-        console.error("Could not switch DeepAR Beauty preset:", error);
-        showError("This KIKO look could not load. Open Console and send the red error text.");
-      } finally {
-        isChangingLook = false;
-      }
-    }
-
-    lookButtons.forEach(function(button) {
-      button.addEventListener("click", function() {
-        changeKikoLook(button);
-      });
+    nextLookBtn.addEventListener("click", function() {
+      applyBeautyPresetByIndex(currentLookIndex + 1);
     });
 
     startQuizBtn.addEventListener("click", function(event) {
       event.preventDefault();
       event.stopPropagation();
+
+      startQuizBtn.classList.add("is-selected");
 
       try {
         window.parent.postMessage({
