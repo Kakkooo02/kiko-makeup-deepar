@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
   >
-  <title>KIKO DeepAR Mirror</title>
+  <title>KIKO DeepAR Beauty Mirror</title>
 
   <script src="https://cdn.jsdelivr.net/npm/deepar/js/deepar.js"></script>
 
@@ -118,14 +118,23 @@
         #000;
     }
 
-    #deepar-canvas {
+    #deepar-preview {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
       background: #000;
       z-index: 1;
+      overflow: hidden;
+      transform: scaleX(-1);
+    }
+
+    #deepar-preview canvas,
+    #deepar-preview video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
     }
 
     .kiko-loading {
@@ -372,7 +381,7 @@
     </header>
 
     <main class="kiko-stage">
-      <canvas id="deepar-canvas"></canvas>
+      <div id="deepar-preview"></div>
 
       <div id="kikoLoading" class="kiko-loading">
         Opening camera and loading your KIKO look...
@@ -390,7 +399,7 @@
             class="kiko-look-btn is-active"
             type="button"
             data-look="Natural Glow"
-            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/aviators"
+            data-preset="makeup/caramel-kiss/preset.json"
           >
             Natural Glow
           </button>
@@ -399,7 +408,7 @@
             class="kiko-look-btn"
             type="button"
             data-look="Everyday Soft Glam"
-            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/flowers"
+            data-preset="makeup/kim-classic/preset.json"
           >
             Everyday Soft Glam
           </button>
@@ -408,7 +417,7 @@
             class="kiko-look-btn"
             type="button"
             data-look="Bold Glam"
-            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/lion"
+            data-preset="makeup/night-out/preset.json"
           >
             Bold Glam
           </button>
@@ -421,29 +430,34 @@
     </main>
   </div>
 
-  <script>
+  <script type="module">
+    import * as Beauty from "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/beauty-deepar.esm.js";
+
     let deepARInstance = null;
+    let beautyInstance = null;
     let selectedKikoLook = "Natural Glow";
+    let isChangingLook = false;
 
     const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
+    const BEAUTY_LIBRARY_PATH = "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/";
 
     const loadingEl = document.getElementById("kikoLoading");
     const errorEl = document.getElementById("kikoError");
     const titleEl = document.getElementById("kikoLookTitle");
-    const canvas = document.getElementById("deepar-canvas");
+    const previewEl = document.getElementById("deepar-preview");
     const lookButtons = Array.from(document.querySelectorAll(".kiko-look-btn"));
     const startQuizBtn = document.getElementById("kikoStartQuizBtn");
 
-    function sizeDeepARCanvas() {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-
-      canvas.width = Math.floor(rect.width * dpr);
-      canvas.height = Math.floor(rect.height * dpr);
-    }
-
     function hideLoading() {
       loadingEl.classList.add("is-hidden");
+    }
+
+    function showLoading(message) {
+      if (message) {
+        loadingEl.textContent = message;
+      }
+
+      loadingEl.classList.remove("is-hidden");
     }
 
     function showError(message) {
@@ -456,38 +470,66 @@
       errorEl.classList.add("is-visible");
     }
 
-    async function initDeepAR() {
+    function makeCacheSafePath(path) {
+      return path + "?v=1";
+    }
+
+    async function applyBeautyPreset(presetPath, lookName) {
+      if (!beautyInstance || !presetPath) {
+        return;
+      }
+
+      await beautyInstance.reset();
+      await beautyInstance.disable(false);
+      await beautyInstance.importPreset(makeCacheSafePath(presetPath));
+
+      selectedKikoLook = lookName || "Natural Glow";
+
+      if (titleEl) {
+        titleEl.textContent = selectedKikoLook;
+      }
+    }
+
+    async function initDeepARBeauty() {
       try {
         if (!KIKO_LICENSE_KEY || KIKO_LICENSE_KEY === "PASTE_YOUR_DEEPAR_WEB_LICENSE_KEY_HERE") {
           showError("Add your DeepAR Web license key inside index.html first.");
           return;
         }
 
-        sizeDeepARCanvas();
-
-        deepARInstance = await deepar.initialize({
+        deepARInstance = await window.deepar.initialize({
           licenseKey: KIKO_LICENSE_KEY,
-          canvas: canvas,
-          effect: "https://cdn.jsdelivr.net/npm/deepar/effects/aviators"
+          previewElement: previewEl
         });
+
+        beautyInstance = await Beauty.initializeBeauty(
+          deepARInstance,
+          BEAUTY_LIBRARY_PATH
+        );
+
+        const firstButton = document.querySelector(".kiko-look-btn.is-active");
+        const firstPreset = firstButton.getAttribute("data-preset");
+        const firstLook = firstButton.getAttribute("data-look");
+
+        showLoading("Loading Natural Glow...");
+        await applyBeautyPreset(firstPreset, firstLook);
 
         hideLoading();
       } catch (error) {
-        console.error("DeepAR failed to initialize:", error);
-        showError("DeepAR could not start. Check your license key domain and camera permission.");
+        console.error("DeepAR Beauty failed to initialize:", error);
+        showError("DeepAR Beauty could not start. Check that the Beauty preset folders were uploaded correctly.");
       }
     }
 
     async function changeKikoLook(button) {
-      if (!button || !deepARInstance) {
+      if (!button || !beautyInstance || isChangingLook) {
         return;
       }
 
-      const effectURL = button.getAttribute("data-effect");
-      const lookName = button.getAttribute("data-look");
+      isChangingLook = true;
 
-      selectedKikoLook = lookName || "Natural Glow";
-      titleEl.textContent = selectedKikoLook;
+      const presetPath = button.getAttribute("data-preset");
+      const lookName = button.getAttribute("data-look");
 
       lookButtons.forEach(function(btn) {
         btn.classList.remove("is-active");
@@ -496,15 +538,14 @@
       button.classList.add("is-active");
 
       try {
-        loadingEl.textContent = "Loading " + selectedKikoLook + "...";
-        loadingEl.classList.remove("is-hidden");
-
-        await deepARInstance.switchEffect(effectURL);
-
+        showLoading("Loading " + lookName + "...");
+        await applyBeautyPreset(presetPath, lookName);
         hideLoading();
       } catch (error) {
-        console.error("Could not switch DeepAR effect:", error);
-        showError("This effect could not load. Try refreshing the page.");
+        console.error("Could not switch DeepAR Beauty preset:", error);
+        showError("This KIKO look could not load. Check the preset folder path in GitHub.");
+      } finally {
+        isChangingLook = false;
       }
     }
 
@@ -528,11 +569,7 @@
       window.location.hash = "kiko-filter-done";
     });
 
-    window.addEventListener("resize", function() {
-      sizeDeepARCanvas();
-    });
-
-    window.addEventListener("load", initDeepAR);
+    window.addEventListener("load", initDeepARBeauty);
   </script>
 </body>
 </html>
