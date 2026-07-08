@@ -1,11 +1,538 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>KIKO DeepAR Test</title>
-  </head>
-  <body style="background:#000;color:#fff;font-family:Arial;text-align:center;padding-top:80px;">
-    <h1>KIKO DeepAR page is live</h1>
-    <p>GitHub Pages test is working.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+  <title>KIKO DeepAR Mirror</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/deepar/js/deepar.js"></script>
+
+  <style>
+    @font-face {
+      font-family: "KIKOPro";
+      src: url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b32.woff2") format("woff2"),
+           url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b37.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    body,
+    body * {
+      box-sizing: border-box;
+      font-family: "KIKOPro", Arial, sans-serif;
+    }
+
+    .kiko-page {
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .kiko-brand-header {
+      width: 100%;
+      height: clamp(92px, 9.6vw, 104px);
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow: hidden;
+      position: relative;
+      z-index: 20;
+    }
+
+    .kiko-brand-top-strip {
+      width: 100%;
+      height: 5px;
+      background: #000;
+      position: relative;
+      z-index: 3;
+    }
+
+    .kiko-nxtgen-img {
+      display: block;
+      width: auto;
+      height: clamp(20px, 2.5vw, 28px);
+      max-width: 135px;
+      object-fit: contain;
+      position: absolute;
+      right: clamp(18px, 3vw, 40px);
+      top: 7px;
+      transform: none;
+      z-index: 4;
+    }
+
+    .kiko-brand-logo-bar {
+      width: 100%;
+      height: clamp(70px, 7.4vw, 82px);
+      background: #000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kiko-brand-logo-wrap {
+      height: clamp(78px, 8.2vw, 94px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .kiko-brand-logo-img {
+      display: block;
+      width: clamp(170px, 24vw, 270px);
+      height: auto;
+      object-fit: contain;
+      transform: translateY(-4px) scale(0.58);
+      transform-origin: center center;
+    }
+
+    .kiko-stage {
+      width: 100%;
+      height: calc(100vh - clamp(92px, 9.6vw, 104px));
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.08) 0%, transparent 42%),
+        #000;
+    }
+
+    #deepar-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+      z-index: 1;
+    }
+
+    .kiko-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      background: #000;
+      color: rgba(255, 255, 255, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+      font-size: 18px;
+      line-height: 1.45;
+      letter-spacing: 0.03em;
+    }
+
+    .kiko-loading.is-hidden {
+      display: none;
+    }
+
+    .kiko-error {
+      position: absolute;
+      inset: 0;
+      z-index: 9;
+      background: #000;
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px;
+      line-height: 1.45;
+      font-size: 16px;
+    }
+
+    .kiko-error.is-visible {
+      display: flex;
+    }
+
+    .kiko-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 6;
+      padding: 24px 18px 30px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.94), rgba(0, 0, 0, 0));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      pointer-events: none;
+    }
+
+    .kiko-look-title {
+      color: #fff;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+    }
+
+    .kiko-controls {
+      width: min(92vw, 760px);
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .kiko-look-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border: 1.5px solid rgba(255, 255, 255, 0.92);
+      background: rgba(0, 0, 0, 0.44);
+      color: #fff;
+      border-radius: 999px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+      appearance: none;
+      -webkit-appearance: none;
+      white-space: nowrap;
+    }
+
+    .kiko-look-btn.is-active {
+      background: #fff;
+      color: #000;
+      transform: scale(1.04);
+    }
+
+    .kiko-start-btn {
+      width: min(330px, 92vw);
+      min-height: 56px;
+      border: 2px solid rgba(255, 154, 204, 0.9);
+      border-radius: 0;
+      background: #fff;
+      color: #000;
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      pointer-events: auto;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .kiko-start-btn:hover {
+      background: #f2f2f2;
+      color: #000;
+    }
+
+    @media (max-width: 768px) {
+      .kiko-brand-header {
+        height: 94px;
+      }
+
+      .kiko-brand-logo-bar,
+      .kiko-brand-logo-wrap {
+        height: 72px;
+      }
+
+      .kiko-brand-logo-img {
+        width: clamp(150px, 30vw, 220px);
+        transform: translateY(-4px) scale(0.58);
+      }
+
+      .kiko-stage {
+        height: calc(100vh - 94px);
+      }
+
+      .kiko-controls {
+        width: 94vw;
+        gap: 8px;
+      }
+
+      .kiko-look-btn {
+        min-height: 44px;
+        padding: 0 10px;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .kiko-brand-header {
+        height: 86px;
+      }
+
+      .kiko-brand-logo-bar,
+      .kiko-brand-logo-wrap {
+        height: 68px;
+      }
+
+      .kiko-nxtgen-img {
+        height: 20px;
+        max-width: 120px;
+        right: 18px;
+        top: 7px;
+      }
+
+      .kiko-brand-logo-img {
+        width: 175px;
+        transform: translateY(-3px) scale(0.58);
+      }
+
+      .kiko-stage {
+        height: calc(100vh - 86px);
+      }
+
+      .kiko-bottom {
+        padding: 20px 12px 24px;
+        gap: 12px;
+      }
+
+      .kiko-look-title {
+        font-size: 14px;
+      }
+
+      .kiko-controls {
+        width: 96vw;
+        gap: 7px;
+      }
+
+      .kiko-look-btn {
+        min-height: 42px;
+        padding: 0 8px;
+        font-size: 9px;
+        letter-spacing: 0.04em;
+      }
+
+      .kiko-start-btn {
+        min-height: 52px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .kiko-nxtgen-img {
+        height: 18px;
+        max-width: 108px;
+      }
+
+      .kiko-brand-logo-img {
+        width: 165px;
+        transform: translateY(-3px) scale(0.58);
+      }
+
+      .kiko-look-btn {
+        padding: 0 6px;
+        font-size: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="kiko-page">
+    <header class="kiko-brand-header">
+      <div class="kiko-brand-top-strip">
+        <img
+          class="kiko-nxtgen-img"
+          src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a44c03218d22f08d74885f3.png"
+          alt="NxtGen"
+        >
+      </div>
+
+      <div class="kiko-brand-logo-bar">
+        <div class="kiko-brand-logo-wrap">
+          <img
+            class="kiko-brand-logo-img"
+            src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
+            alt="KIKO Milano"
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="kiko-stage">
+      <canvas id="deepar-canvas"></canvas>
+
+      <div id="kikoLoading" class="kiko-loading">
+        Opening camera and loading your KIKO look...
+      </div>
+
+      <div id="kikoError" class="kiko-error">
+        Camera could not start. Please check camera permission, refresh the page, and try again.
+      </div>
+
+      <div class="kiko-bottom">
+        <div id="kikoLookTitle" class="kiko-look-title">Natural Glow</div>
+
+        <div class="kiko-controls">
+          <button
+            class="kiko-look-btn is-active"
+            type="button"
+            data-look="Natural Glow"
+            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/aviators"
+          >
+            Natural Glow
+          </button>
+
+          <button
+            class="kiko-look-btn"
+            type="button"
+            data-look="Everyday Soft Glam"
+            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/flowers"
+          >
+            Everyday Soft Glam
+          </button>
+
+          <button
+            class="kiko-look-btn"
+            type="button"
+            data-look="Bold Glam"
+            data-effect="https://cdn.jsdelivr.net/npm/deepar/effects/lion"
+          >
+            Bold Glam
+          </button>
+        </div>
+
+        <button class="kiko-start-btn" type="button" id="kikoStartQuizBtn">
+          START THE QUIZ
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let deepARInstance = null;
+    let selectedKikoLook = "Natural Glow";
+
+    const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
+
+    const loadingEl = document.getElementById("kikoLoading");
+    const errorEl = document.getElementById("kikoError");
+    const titleEl = document.getElementById("kikoLookTitle");
+    const canvas = document.getElementById("deepar-canvas");
+    const lookButtons = Array.from(document.querySelectorAll(".kiko-look-btn"));
+    const startQuizBtn = document.getElementById("kikoStartQuizBtn");
+
+    function sizeDeepARCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+    }
+
+    function hideLoading() {
+      loadingEl.classList.add("is-hidden");
+    }
+
+    function showError(message) {
+      hideLoading();
+
+      if (message) {
+        errorEl.textContent = message;
+      }
+
+      errorEl.classList.add("is-visible");
+    }
+
+    async function initDeepAR() {
+      try {
+        if (!KIKO_LICENSE_KEY || KIKO_LICENSE_KEY === "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3") {
+          showError("Add your DeepAR Web license key inside index.html first.");
+          return;
+        }
+
+        sizeDeepARCanvas();
+
+        deepARInstance = await deepar.initialize({
+          licenseKey: KIKO_LICENSE_KEY,
+          canvas: canvas,
+          effect: "https://cdn.jsdelivr.net/npm/deepar/effects/aviators"
+        });
+
+        hideLoading();
+      } catch (error) {
+        console.error("DeepAR failed to initialize:", error);
+        showError("DeepAR could not start. Check your license key domain and camera permission.");
+      }
+    }
+
+    async function changeKikoLook(button) {
+      if (!button || !deepARInstance) {
+        return;
+      }
+
+      const effectURL = button.getAttribute("data-effect");
+      const lookName = button.getAttribute("data-look");
+
+      selectedKikoLook = lookName || "Natural Glow";
+      titleEl.textContent = selectedKikoLook;
+
+      lookButtons.forEach(function(btn) {
+        btn.classList.remove("is-active");
+      });
+
+      button.classList.add("is-active");
+
+      try {
+        loadingEl.textContent = "Loading " + selectedKikoLook + "...";
+        loadingEl.classList.remove("is-hidden");
+
+        await deepARInstance.switchEffect(effectURL);
+
+        hideLoading();
+      } catch (error) {
+        console.error("Could not switch DeepAR effect:", error);
+        showError("This effect could not load. Try refreshing the page.");
+      }
+    }
+
+    lookButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        changeKikoLook(button);
+      });
+    });
+
+    startQuizBtn.addEventListener("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      try {
+        window.parent.postMessage({
+          type: "KIKO_DEEPAR_DONE",
+          selectedLook: selectedKikoLook
+        }, "*");
+      } catch (error) {}
+
+      window.location.hash = "kiko-filter-done";
+    });
+
+    window.addEventListener("resize", function() {
+      sizeDeepARCanvas();
+    });
+
+    window.addEventListener("load", initDeepAR);
+  </script>
+</body>
 </html>
