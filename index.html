@@ -399,7 +399,7 @@
             class="kiko-look-btn is-active"
             type="button"
             data-look="Natural Glow"
-            data-preset="makeup/carmel-kiss/preset.json"
+            data-preset="makeup/caramel-kiss.zip"
           >
             Natural Glow
           </button>
@@ -408,7 +408,7 @@
             class="kiko-look-btn"
             type="button"
             data-look="Everyday Soft Glam"
-            data-preset="makeup/kim-classic/preset.json"
+            data-preset="makeup/kim-classic.zip"
           >
             Everyday Soft Glam
           </button>
@@ -417,7 +417,7 @@
             class="kiko-look-btn"
             type="button"
             data-look="Bold Glam"
-            data-preset="makeup/night-out/preset.json"
+            data-preset="makeup/night-out.zip"
           >
             Bold Glam
           </button>
@@ -470,18 +470,13 @@
       errorEl.classList.add("is-visible");
     }
 
-    function makeCacheSafePath(path) {
-      return path + "?v=1";
-    }
-
     async function applyBeautyPreset(presetPath, lookName) {
       if (!beautyInstance || !presetPath) {
         return;
       }
 
       await beautyInstance.reset();
-      await beautyInstance.disable(false);
-      await beautyInstance.importPreset(makeCacheSafePath(presetPath));
+      await beautyInstance.importPreset(presetPath);
 
       selectedKikoLook = lookName || "Natural Glow";
 
@@ -517,7 +512,7 @@
         hideLoading();
       } catch (error) {
         console.error("DeepAR Beauty failed to initialize:", error);
-        showError("DeepAR Beauty could not start. Check that the Beauty preset folders were uploaded correctly.");
+        showError("DeepAR Beauty could not start. Open Console and send the red error text.");
       }
     }
 
@@ -543,7 +538,7 @@
         hideLoading();
       } catch (error) {
         console.error("Could not switch DeepAR Beauty preset:", error);
-        showError("This KIKO look could not load. Check the preset folder path in GitHub.");
+        showError("This KIKO look could not load. Open Console and send the red error text.");
       } finally {
         isChangingLook = false;
       }
