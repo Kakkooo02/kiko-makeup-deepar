@@ -22,23 +22,28 @@
 
     html,
     body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: #000;
-      overflow-x: hidden;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #000 !important;
+      overflow-x: hidden !important;
     }
 
-    body,
-    body * {
+    .kiko-camera-page,
+    .kiko-camera-page * {
       box-sizing: border-box;
-      font-family: "KIKOPro", Arial, sans-serif;
+      font-family: "KIKOPro" !important;
     }
 
     .kiko-camera-page {
-      width: 100vw;
+      width: 100vw !important;
+      max-width: none !important;
+      min-width: 100vw !important;
+      margin-left: calc(50% - 50vw) !important;
+      margin-right: calc(50% - 50vw) !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
       min-height: 100vh;
+      padding: 0 !important;
       background:
         radial-gradient(circle at 34% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 22%, transparent 44%),
         radial-gradient(circle at 78% 92%, rgba(210, 210, 210, 0.07) 0%, transparent 34%),
@@ -48,71 +53,36 @@
       position: relative;
     }
 
-    .kiko-brand-header {
+    .kiko-camera-top {
       width: 100%;
-      height: clamp(92px, 9.6vw, 104px);
-      background: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      overflow: hidden;
+      height: 82px;
       position: relative;
-      z-index: 20;
-    }
-
-    .kiko-brand-top-strip {
-      width: 100%;
-      height: 5px;
-      background: #000;
-      position: relative;
-      z-index: 3;
-    }
-
-    .kiko-nxtgen-img {
-      display: block;
-      width: auto;
-      height: clamp(20px, 2.5vw, 28px);
-      max-width: 135px;
-      object-fit: contain;
-      position: absolute;
-      right: clamp(18px, 3vw, 40px);
-      top: 7px;
-      transform: none;
-      z-index: 4;
-    }
-
-    .kiko-brand-logo-bar {
-      width: 100%;
-      height: clamp(70px, 7.4vw, 82px);
-      background: #000;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-      z-index: 1;
-    }
-
-    .kiko-brand-logo-wrap {
-      height: clamp(78px, 8.2vw, 94px);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
 
-    .kiko-brand-logo-img {
-      display: block;
-      width: clamp(170px, 24vw, 270px);
+    .kiko-camera-logo {
+      width: 220px;
       height: auto;
+      display: block;
+      transform: scale(0.72);
+    }
+
+    .kiko-camera-nxtgen {
+      position: absolute;
+      right: 48px;
+      top: 5px;
+      height: 32px;
+      width: auto;
+      display: block;
       object-fit: contain;
-      transform: translateY(-4px) scale(0.58);
-      transform-origin: center center;
     }
 
     .kiko-camera-hero {
-      min-height: calc(100vh - clamp(92px, 9.6vw, 104px));
+      height: calc(100vh - 82px);
+      min-height: 540px;
+      max-height: 680px;
       display: grid;
       grid-template-columns: minmax(300px, 0.9fr) minmax(390px, 1.1fr);
       align-items: center;
@@ -346,15 +316,6 @@
       transform: translateY(-4px);
     }
 
-    .kiko-script-title {
-      font-size: clamp(36px, 3.5vw, 54px);
-      line-height: 0.95;
-      color: #fff;
-      margin-bottom: 6px;
-      font-weight: 400;
-      opacity: 0.92;
-    }
-
     .kiko-camera-right h1 {
       margin: 0;
       font-size: clamp(50px, 5vw, 78px);
@@ -362,7 +323,7 @@
       font-weight: 400;
       letter-spacing: 0.02em;
       color: #fff;
-      text-transform: uppercase;
+      text-transform: none;
       text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
     }
 
@@ -393,10 +354,10 @@
       width: 330px;
       max-width: 90%;
       min-height: 58px;
-      border: 2px solid rgba(255, 154, 204, 0.82);
-      border-radius: 0;
-      background: #fff;
-      color: #000;
+      border: 2px solid rgba(255, 154, 204, 0.82) !important;
+      border-radius: 0 !important;
+      background: #fff !important;
+      color: #000 !important;
       font-size: 18px;
       line-height: 1;
       font-weight: 400;
@@ -408,9 +369,9 @@
         inset 0 0 0 2px rgba(0, 0, 0, 0.08);
       position: relative;
       z-index: 99999;
-      pointer-events: auto;
-      appearance: none;
-      -webkit-appearance: none;
+      pointer-events: auto !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
       transition:
         transform 220ms ease,
         box-shadow 220ms ease,
@@ -420,8 +381,8 @@
     .kiko-start-quiz-btn:hover,
     .kiko-start-quiz-btn.is-selected {
       transform: translateY(-1px);
-      background: #f2f2f2;
-      color: #000;
+      background: #f2f2f2 !important;
+      color: #000 !important;
     }
 
     @keyframes kikoCameraGlow {
@@ -452,7 +413,9 @@
       }
 
       .kiko-camera-hero {
-        min-height: auto;
+        height: auto;
+        min-height: 0;
+        max-height: none;
         grid-template-columns: 1fr;
         padding: 10px 28px 28px;
         gap: 24px;
@@ -470,34 +433,24 @@
     }
 
     @media (max-width: 560px) {
-      .kiko-brand-header {
-        height: 86px;
+      .kiko-camera-top {
+        height: 78px;
       }
 
-      .kiko-brand-logo-bar,
-      .kiko-brand-logo-wrap {
-        height: 68px;
-      }
-
-      .kiko-nxtgen-img {
-        height: 20px;
-        max-width: 120px;
-        right: 18px;
-        top: 7px;
-      }
-
-      .kiko-brand-logo-img {
+      .kiko-camera-logo {
         width: 175px;
-        transform: translateY(-3px) scale(0.58);
+        transform: scale(0.7);
+      }
+
+      .kiko-camera-nxtgen {
+        right: 18px;
+        top: 30px;
+        height: 14px;
       }
 
       .kiko-camera-hero {
         padding: 8px 18px 26px;
         gap: 20px;
-      }
-
-      .kiko-script-title {
-        font-size: 34px;
       }
 
       .kiko-camera-right h1 {
@@ -573,25 +526,19 @@
 
 <body>
   <div class="kiko-camera-page">
-    <header class="kiko-brand-header">
-      <div class="kiko-brand-top-strip">
-        <img
-          class="kiko-nxtgen-img"
-          src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a44c03218d22f08d74885f3.png"
-          alt="NxtGen"
-        >
-      </div>
+    <div class="kiko-camera-top">
+      <img
+        class="kiko-camera-logo"
+        src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
+        alt="KIKO Milano"
+      >
 
-      <div class="kiko-brand-logo-bar">
-        <div class="kiko-brand-logo-wrap">
-          <img
-            class="kiko-brand-logo-img"
-            src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
-            alt="KIKO Milano"
-          >
-        </div>
-      </div>
-    </header>
+      <img
+        class="kiko-camera-nxtgen"
+        src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a44c03218d22f08d74885f3.png"
+        alt="NxtGen"
+      >
+    </div>
 
     <section class="kiko-camera-hero">
       <div class="kiko-camera-left">
@@ -617,7 +564,7 @@
           </button>
 
           <div class="kiko-look-info">
-            <div id="kikoLookName" class="kiko-look-name">NATURAL GLOW</div>
+            <div id="kikoLookName" class="kiko-look-name">PINK GLOW</div>
 
             <div id="kikoLookDots" class="kiko-look-dots">
               <span class="is-active"></span>
@@ -633,18 +580,16 @@
       </div>
 
       <div class="kiko-camera-right">
-        <div class="kiko-script-title">Try Your</div>
-
-        <h1>KIKO LOOK</h1>
+        <h1>Bring KIKO to your Campus</h1>
 
         <div class="kiko-title-line"></div>
 
         <p class="kiko-main-copy">
-          Swipe through beauty looks and find your favourite style before you start.
+          Swipe through lip looks and find your favourite style before you start.
         </p>
 
         <p class="kiko-sub-copy">
-          Then take the quiz to help bring a free KIKO Milano masterclass to your campus.
+          Take the quiz to help bring a free KIKO Milano makeup and skincare masterclass to your university.
         </p>
 
         <button class="kiko-start-quiz-btn" type="button" id="kikoStartQuizBtn">
@@ -660,7 +605,7 @@
     let deepARInstance = null;
     let beautyInstance = null;
     let currentLookIndex = 0;
-    let selectedKikoLook = "Natural Glow";
+    let selectedKikoLook = "Pink Glow";
     let isChangingLook = false;
 
     const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
@@ -668,14 +613,14 @@
 
     const kikoLooks = [
       {
-        name: "NATURAL GLOW",
-        messageName: "Natural Glow",
-        preset: "makeup/caramel-kiss.zip"
+        name: "PINK GLOW",
+        messageName: "Pink Glow",
+        preset: "makeup/spring-petals.zip"
       },
       {
         name: "EVERYDAY SOFT GLAM",
         messageName: "Everyday Soft Glam",
-        preset: "makeup/kim-classic.zip"
+        preset: "makeup/twilight-hues.zip"
       },
       {
         name: "BOLD GLAM",
@@ -777,7 +722,7 @@
 
         updateLookUI();
 
-        showLoading("Loading NATURAL GLOW...");
+        showLoading("Loading PINK GLOW...");
         await beautyInstance.reset();
         await beautyInstance.importPreset(kikoLooks[0].preset);
 
