@@ -95,9 +95,9 @@
       min-height: 540px;
       max-height: 680px;
       display: grid;
-      grid-template-columns: minmax(300px, 0.9fr) minmax(390px, 1.1fr);
+      grid-template-columns: minmax(300px, 0.95fr) minmax(390px, 1.05fr);
       align-items: center;
-      gap: 30px;
+      gap: 18px;
       padding: 0 58px 28px;
       position: relative;
     }
@@ -112,33 +112,34 @@
       flex-direction: column;
       z-index: 5;
       padding-bottom: 8px;
+      transform: translateX(34px);
     }
 
     .kiko-camera-glow {
       position: absolute;
-      width: 420px;
-      height: 460px;
-      border-radius: 34% 66% 48% 52% / 48% 42% 58% 52%;
+      width: 385px;
+      height: 455px;
+      border-radius: 50%;
       background:
-        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 154, 204, 0.12) 34%, transparent 68%);
-      filter: blur(22px);
-      opacity: 0.72;
+        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 154, 204, 0.1) 32%, transparent 68%);
+      filter: blur(20px);
+      opacity: 0.76;
       animation: kikoCameraGlow 5.8s ease-in-out infinite;
       pointer-events: none;
     }
 
     .kiko-camera-mirror-frame {
-      width: 360px;
-      height: 455px;
-      border-radius: 34px;
-      padding: 20px;
+      width: 330px;
+      height: 430px;
+      border-radius: 50%;
+      padding: 21px;
       position: relative;
       z-index: 10;
       background:
-        linear-gradient(135deg, #fff6c8 0%, #c98a18 12%, #5d3604 24%, #f8d96f 38%, #8a5307 52%, #fff0a8 66%, #a7660d 80%, #f5c95c 100%);
+        radial-gradient(circle at 24% 14%, #fff9cf 0%, #f6d46d 10%, #b8750d 22%, #5f3704 33%, #f9dc75 46%, #8b5607 58%, #fff0a5 72%, #9b610b 84%, #f5c45a 100%);
       box-shadow:
-        0 26px 60px rgba(0, 0, 0, 0.78),
-        0 0 38px rgba(255, 199, 90, 0.18),
+        0 28px 62px rgba(0, 0, 0, 0.76),
+        0 0 34px rgba(255, 205, 95, 0.18),
         inset 0 0 0 4px rgba(255, 255, 255, 0.28),
         inset 0 0 28px rgba(40, 20, 0, 0.72);
       animation: kikoMirrorFloat 5.2s ease-in-out infinite;
@@ -148,8 +149,8 @@
       content: "";
       position: absolute;
       inset: 7px;
-      border-radius: 28px;
-      border: 4px double rgba(255, 238, 170, 0.9);
+      border-radius: 50%;
+      border: 4px double rgba(255, 238, 170, 0.88);
       pointer-events: none;
       z-index: 7;
     }
@@ -158,8 +159,8 @@
       content: "";
       position: absolute;
       inset: 17px;
-      border-radius: 20px;
-      border: 2px solid rgba(82, 45, 0, 0.72);
+      border-radius: 50%;
+      border: 2px solid rgba(77, 43, 0, 0.72);
       box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.16),
         0 0 18px rgba(255, 215, 120, 0.18);
@@ -170,12 +171,12 @@
     .kiko-camera-video-wrap {
       width: 100%;
       height: 100%;
-      border-radius: 20px;
+      border-radius: 50%;
       overflow: hidden;
       background: #111;
       position: relative;
       box-shadow:
-        inset 0 0 32px rgba(0, 0, 0, 0.76),
+        inset 0 0 30px rgba(0, 0, 0, 0.76),
         inset 0 0 0 2px rgba(255, 255, 255, 0.2);
     }
 
@@ -184,7 +185,7 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, transparent 28%, transparent 68%, rgba(255, 255, 255, 0.06) 100%);
+        linear-gradient(118deg, rgba(255, 255, 255, 0.15) 0%, transparent 28%, transparent 68%, rgba(255, 255, 255, 0.06) 100%);
       pointer-events: none;
       z-index: 9;
     }
@@ -222,7 +223,7 @@
       font-size: 15px;
       line-height: 1.45;
       letter-spacing: 0.03em;
-      border-radius: 20px;
+      border-radius: 50%;
     }
 
     .kiko-loading.is-hidden {
@@ -242,7 +243,7 @@
       padding: 24px;
       line-height: 1.45;
       font-size: 13px;
-      border-radius: 20px;
+      border-radius: 50%;
     }
 
     .kiko-error.is-visible {
@@ -250,7 +251,7 @@
     }
 
     .kiko-look-controls {
-      width: 360px;
+      width: 340px;
       max-width: 90vw;
       margin-top: 16px;
       display: grid;
@@ -443,7 +444,8 @@
       .kiko-camera-left {
         order: 2;
         height: auto;
-        min-height: 540px;
+        min-height: 520px;
+        transform: translateX(0);
       }
     }
 
@@ -510,40 +512,23 @@
       }
 
       .kiko-camera-left {
-        min-height: 465px;
+        min-height: 450px;
+        transform: translateX(0);
       }
 
       .kiko-camera-glow {
         width: 320px;
-        height: 360px;
+        height: 380px;
       }
 
       .kiko-camera-mirror-frame {
-        width: 275px;
-        height: 355px;
-        border-radius: 28px;
-        padding: 16px;
-      }
-
-      .kiko-camera-mirror-frame::before {
-        inset: 6px;
-        border-radius: 23px;
-        border-width: 3px;
-      }
-
-      .kiko-camera-mirror-frame::after {
-        inset: 14px;
-        border-radius: 17px;
-      }
-
-      .kiko-camera-video-wrap,
-      .kiko-loading,
-      .kiko-error {
-        border-radius: 16px;
+        width: 265px;
+        height: 350px;
+        padding: 17px;
       }
 
       .kiko-look-controls {
-        width: 285px;
+        width: 295px;
         grid-template-columns: 44px 1fr 44px;
         gap: 8px;
         margin-top: 12px;
@@ -594,9 +579,9 @@
       }
 
       .kiko-camera-mirror-frame {
-        width: 255px;
+        width: 250px;
         height: 335px;
-        padding: 15px;
+        padding: 16px;
       }
     }
   </style>
