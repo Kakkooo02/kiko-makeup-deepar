@@ -1,321 +1,844 @@
-<div class="kiko-thankyou-page">
-  <div class="kiko-thankyou-bars">
-    <div class="kiko-thankyou-brand-bar">
-      <div class="kiko-thankyou-logo-wrap">
-        <img
-          class="kiko-thankyou-logo-img"
-          src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
-          alt="KIKO Milano"
-        >
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+  <title>KIKO DeepAR Beauty Mirror</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/deepar/js/deepar.js"></script>
+
+  <style>
+    @font-face {
+      font-family: "KIKOPro";
+      src: url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b32.woff2") format("woff2"),
+           url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b37.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    html,
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #000 !important;
+      overflow-x: hidden !important;
+    }
+
+    .kiko-camera-page,
+    .kiko-camera-page * {
+      box-sizing: border-box;
+      font-family: "KIKOPro" !important;
+    }
+
+    .kiko-camera-page {
+      width: 100vw !important;
+      max-width: none !important;
+      min-width: 100vw !important;
+      margin-left: calc(50% - 50vw) !important;
+      margin-right: calc(50% - 50vw) !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      min-height: 100vh;
+      padding: 0 !important;
+      background:
+        radial-gradient(circle at 34% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 22%, transparent 44%),
+        radial-gradient(circle at 78% 92%, rgba(210, 210, 210, 0.07) 0%, transparent 34%),
+        #000;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .kiko-camera-top {
+      width: 100%;
+      height: clamp(78px, 8.2vw, 94px);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 clamp(6px, 1.4vw, 18px);
+      background: #050505;
+      overflow: visible;
+      z-index: 20;
+    }
+
+    .kiko-camera-logo {
+      display: block;
+      width: clamp(170px, 24vw, 270px);
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      transform: translateY(-4px) scale(0.58);
+      transform-origin: center center;
+      margin: 0 auto;
+    }
+
+    .kiko-camera-nxtgen {
+      display: block;
+      width: clamp(82px, 8vw, 118px) !important;
+      height: auto !important;
+      max-width: none !important;
+      object-fit: contain;
+      position: absolute;
+      right: clamp(14px, 2.6vw, 34px);
+      bottom: 8px;
+      top: auto;
+      transform: none;
+      transform-origin: right center;
+      z-index: 4;
+    }
+
+    .kiko-camera-hero {
+      height: calc(100vh - clamp(78px, 8.2vw, 94px));
+      min-height: 540px;
+      max-height: 680px;
+      display: grid;
+      grid-template-columns: minmax(300px, 0.95fr) minmax(390px, 1.05fr);
+      align-items: center;
+      gap: 18px;
+      padding: 0 58px 28px;
+      position: relative;
+    }
+
+    .kiko-camera-left {
+      height: 100%;
+      min-height: 500px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 5;
+      padding-bottom: 8px;
+      transform: translateX(34px);
+    }
+
+    .kiko-camera-glow {
+      position: absolute;
+      width: 385px;
+      height: 455px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 154, 204, 0.1) 32%, transparent 68%);
+      filter: blur(20px);
+      opacity: 0.76;
+      animation: kikoCameraGlow 5.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .kiko-camera-mirror-frame {
+      width: 330px !important;
+      height: 430px !important;
+      border-radius: 50% !important;
+      padding: 21px !important;
+      position: relative;
+      z-index: 10;
+      background:
+        radial-gradient(circle at 24% 14%, #fff9cf 0%, #f6d46d 10%, #b8750d 22%, #5f3704 33%, #f9dc75 46%, #8b5607 58%, #fff0a5 72%, #9b610b 84%, #f5c45a 100%) !important;
+      box-shadow:
+        0 28px 62px rgba(0, 0, 0, 0.76),
+        0 0 34px rgba(255, 205, 95, 0.18),
+        inset 0 0 0 4px rgba(255, 255, 255, 0.28),
+        inset 0 0 28px rgba(40, 20, 0, 0.72);
+      animation: kikoMirrorFloat 5.2s ease-in-out infinite;
+    }
+
+    .kiko-camera-mirror-frame::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50% !important;
+      border: 4px double rgba(255, 238, 170, 0.88);
+      pointer-events: none;
+      z-index: 7;
+    }
+
+    .kiko-camera-mirror-frame::after {
+      content: "";
+      position: absolute;
+      inset: 17px;
+      border-radius: 50% !important;
+      border: 2px solid rgba(77, 43, 0, 0.72);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        0 0 18px rgba(255, 215, 120, 0.18);
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .kiko-camera-video-wrap {
+      width: 100%;
+      height: 100%;
+      border-radius: 50% !important;
+      overflow: hidden;
+      background: #111;
+      position: relative;
+      box-shadow:
+        inset 0 0 30px rgba(0, 0, 0, 0.76),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+    }
+
+    .kiko-camera-video-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(118deg, rgba(255, 255, 255, 0.15) 0%, transparent 28%, transparent 68%, rgba(255, 255, 255, 0.06) 100%);
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    #deepar-preview {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      transform: scaleX(-1);
+    }
+
+    #deepar-preview canvas,
+    #deepar-preview video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+
+    .kiko-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      background: rgba(0, 0, 0, 0.92);
+      color: rgba(255, 255, 255, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      font-size: 15px;
+      line-height: 1.45;
+      letter-spacing: 0.03em;
+      border-radius: 50% !important;
+    }
+
+    .kiko-loading.is-hidden {
+      display: none;
+    }
+
+    .kiko-error {
+      position: absolute;
+      inset: 0;
+      z-index: 13;
+      background: rgba(0, 0, 0, 0.94);
+      color: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      line-height: 1.45;
+      font-size: 13px;
+      border-radius: 50% !important;
+    }
+
+    .kiko-error.is-visible {
+      display: flex;
+    }
+
+    .kiko-look-controls {
+      width: 340px;
+      max-width: 90vw;
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 12;
+    }
+
+    .kiko-look-arrow {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.3px solid rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      font-size: 42px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 7px;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.12);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .kiko-look-arrow:hover {
+      background: #fff;
+      color: #000;
+      transform: translateY(-1px);
+    }
+
+    .kiko-look-info {
+      text-align: center;
+      min-height: 54px;
+    }
+
+    .kiko-look-name {
+      font-size: 16px;
+      letter-spacing: 0.15em;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .kiko-look-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .kiko-look-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: block;
+      background: rgba(255, 255, 255, 0.42);
+      transition:
+        background 220ms ease,
+        transform 220ms ease;
+    }
+
+    .kiko-look-dots span.is-active {
+      background: #fff;
+      transform: scale(1.18);
+    }
+
+    .kiko-camera-right {
+      position: relative;
+      z-index: 10;
+      max-width: 610px;
+      text-align: center;
+      justify-self: center;
+      transform: translateY(-4px);
+    }
+
+    .kiko-camera-right h1 {
+      margin: 0;
+      font-size: clamp(50px, 5vw, 78px);
+      line-height: 0.95;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: #fff;
+      text-transform: none;
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.16);
+    }
+
+    .kiko-title-line {
+      width: 54px;
+      height: 2.5px;
+      background: #ff9acc;
+      margin: 24px auto 24px;
+    }
+
+    .kiko-main-copy {
+      margin: 0 auto 14px;
+      max-width: 500px;
+      font-size: 18px;
+      line-height: 1.42;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .kiko-sub-copy {
+      margin: 0 auto 28px;
+      max-width: 525px;
+      font-size: 18px;
+      line-height: 1.42;
+      color: #ff9acc;
+    }
+
+    .kiko-start-quiz-btn {
+      width: 330px;
+      max-width: 90%;
+      min-height: 58px;
+      border: 2px solid rgba(255, 154, 204, 0.82) !important;
+      border-radius: 0 !important;
+      background: #fff !important;
+      color: #000 !important;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow:
+        0 0 12px rgba(255, 143, 205, 0.24),
+        inset 0 0 0 2px rgba(0, 0, 0, 0.08);
+      position: relative;
+      z-index: 99999;
+      pointer-events: auto !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        background 220ms ease;
+    }
+
+    .kiko-start-quiz-btn:hover,
+    .kiko-start-quiz-btn.is-selected {
+      transform: translateY(-1px);
+      background: #f2f2f2 !important;
+      color: #000 !important;
+    }
+
+    @keyframes kikoCameraGlow {
+      0%, 100% {
+        transform: scale(0.96) translateY(0);
+        opacity: 0.58;
+      }
+
+      50% {
+        transform: scale(1.08) translateY(-12px);
+        opacity: 0.82;
+      }
+    }
+
+    @keyframes kikoMirrorFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .kiko-camera-page {
+        overflow: visible;
+      }
+
+      .kiko-camera-hero {
+        height: auto;
+        min-height: 0;
+        max-height: none;
+        grid-template-columns: 1fr;
+        padding: 10px 28px 28px;
+        gap: 24px;
+      }
+
+      .kiko-camera-right {
+        order: 1;
+      }
+
+      .kiko-camera-left {
+        order: 2;
+        height: auto;
+        min-height: 520px;
+        transform: translateX(0) !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kiko-camera-top {
+        height: 76px;
+        padding: 0 8px;
+      }
+
+      .kiko-camera-logo {
+        width: clamp(150px, 30vw, 220px);
+        transform: translateY(-4px) scale(0.58);
+      }
+
+      .kiko-camera-nxtgen {
+        width: clamp(74px, 15vw, 105px) !important;
+        right: 16px;
+        bottom: 8px;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .kiko-camera-top {
+        height: 76px;
+        padding: 0 6px;
+      }
+
+      .kiko-camera-logo {
+        width: 175px;
+        transform: translateY(-4px) scale(0.58);
+      }
+
+      .kiko-camera-nxtgen {
+        width: 78px !important;
+        right: 12px;
+        bottom: 9px;
+        transform: none;
+      }
+
+      .kiko-camera-hero {
+        padding: 8px 18px 26px;
+        gap: 20px;
+      }
+
+      .kiko-camera-right h1 {
+        font-size: 42px;
+      }
+
+      .kiko-title-line {
+        margin: 20px auto 20px;
+      }
+
+      .kiko-main-copy,
+      .kiko-sub-copy {
+        font-size: 15px;
+        line-height: 1.42;
+      }
+
+      .kiko-sub-copy {
+        margin-bottom: 22px;
+      }
+
+      .kiko-start-quiz-btn {
+        width: 100%;
+        min-height: 56px;
+        font-size: 16px;
+      }
+
+      .kiko-camera-left {
+        min-height: 450px;
+        transform: translateX(0) !important;
+      }
+
+      .kiko-camera-glow {
+        width: 320px;
+        height: 380px;
+      }
+
+      .kiko-camera-mirror-frame {
+        width: 265px !important;
+        height: 350px !important;
+        border-radius: 50% !important;
+        padding: 17px !important;
+      }
+
+      .kiko-camera-mirror-frame::before,
+      .kiko-camera-mirror-frame::after,
+      .kiko-camera-video-wrap,
+      .kiko-loading,
+      .kiko-error {
+        border-radius: 50% !important;
+      }
+
+      .kiko-look-controls {
+        width: 295px;
+        grid-template-columns: 44px 1fr 44px;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .kiko-look-arrow {
+        width: 44px;
+        height: 44px;
+        font-size: 38px;
+        padding-bottom: 6px;
+      }
+
+      .kiko-look-name {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+      }
+
+      .kiko-look-dots span {
+        width: 8px;
+        height: 8px;
+      }
+
+      .kiko-loading {
+        font-size: 12px;
+        padding: 20px;
+      }
+
+      .kiko-error {
+        font-size: 11px;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .kiko-camera-top {
+        height: 76px;
+        padding: 0 4px;
+      }
+
+      .kiko-camera-logo {
+        width: 165px;
+        transform: translateY(-4px) scale(0.56);
+      }
+
+      .kiko-camera-nxtgen {
+        width: 72px !important;
+        right: 10px;
+        bottom: 9px;
+        transform: none;
+      }
+
+      .kiko-camera-mirror-frame {
+        width: 250px !important;
+        height: 335px !important;
+        border-radius: 50% !important;
+        padding: 16px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="kiko-camera-page">
+    <div class="kiko-camera-top">
+      <img
+        class="kiko-camera-logo"
+        src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
+        alt="KIKO Milano"
+      >
 
       <img
-        class="kiko-thankyou-nxtgen-img"
+        class="kiko-camera-nxtgen"
         src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a44c03218d22f08d74885f3.png"
         alt="NxtGen"
       >
     </div>
+
+    <section class="kiko-camera-hero">
+      <div class="kiko-camera-left">
+        <div class="kiko-camera-glow"></div>
+
+        <div class="kiko-camera-mirror-frame">
+          <div class="kiko-camera-video-wrap">
+            <div id="deepar-preview"></div>
+
+            <div id="kikoLoading" class="kiko-loading">
+              Opening camera and loading your KIKO look...
+            </div>
+
+            <div id="kikoError" class="kiko-error">
+              Camera could not start. Please check camera permission, refresh the page, and try again.
+            </div>
+          </div>
+        </div>
+
+        <div class="kiko-look-controls">
+          <button class="kiko-look-arrow kiko-look-prev" type="button" id="kikoPrevLook" aria-label="Previous look">
+            ‹
+          </button>
+
+          <div class="kiko-look-info">
+            <div id="kikoLookName" class="kiko-look-name">PINK GLOW</div>
+
+            <div id="kikoLookDots" class="kiko-look-dots">
+              <span class="is-active"></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <button class="kiko-look-arrow kiko-look-next" type="button" id="kikoNextLook" aria-label="Next look">
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div class="kiko-camera-right">
+        <h1>Bring KIKO to your Campus</h1>
+
+        <div class="kiko-title-line"></div>
+
+        <p class="kiko-main-copy">
+          Swipe through different makeup looks and find your favourite style before you start.
+        </p>
+
+        <p class="kiko-sub-copy">
+          Take the quiz to help bring a free KIKO Milano makeup and skincare masterclass to your university.
+        </p>
+
+        <button class="kiko-start-quiz-btn" type="button" id="kikoStartQuizBtn">
+          START THE QUIZ
+        </button>
+      </div>
+    </section>
   </div>
 
-  <section class="kiko-thankyou-hero">
-    <div class="kiko-thankyou-card">
-      <h1>Thank You</h1>
+  <script type="module">
+    import * as Beauty from "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/beauty-deepar.esm.js";
 
-      <div class="kiko-thankyou-line"></div>
+    let deepARInstance = null;
+    let beautyInstance = null;
+    let currentLookIndex = 0;
+    let selectedKikoLook = "Pink Glow";
+    let isChangingLook = false;
 
-      <p class="kiko-thankyou-main">
-        Your response has been submitted.
-      </p>
+    const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
+    const BEAUTY_LIBRARY_PATH = "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/";
 
-      <p class="kiko-thankyou-pink">
-        Your university is now one step closer to winning a free KIKO Milano makeup and skincare masterclass.
-      </p>
+    const kikoLooks = [
+      {
+        name: "PINK GLOW",
+        messageName: "Pink Glow",
+        preset: "makeup/spring-petals.zip"
+      },
+      {
+        name: "EVERYDAY GLAM",
+        messageName: "Everyday Soft Glam",
+        preset: "makeup/twilight-hues.zip"
+      },
+      {
+        name: "BOLD GLAM",
+        messageName: "Bold Glam",
+        preset: "makeup/night-out.zip"
+      }
+    ];
 
-      <p class="kiko-thankyou-note">
-        Keep an eye out for updates from NxtGen and KIKO Milano.
-      </p>
-    </div>
-  </section>
-</div>
+    const loadingEl = document.getElementById("kikoLoading");
+    const errorEl = document.getElementById("kikoError");
+    const previewEl = document.getElementById("deepar-preview");
+    const lookNameEl = document.getElementById("kikoLookName");
+    const lookDots = Array.from(document.querySelectorAll("#kikoLookDots span"));
+    const prevLookBtn = document.getElementById("kikoPrevLook");
+    const nextLookBtn = document.getElementById("kikoNextLook");
+    const startQuizBtn = document.getElementById("kikoStartQuizBtn");
 
-<style>
-  @font-face {
-    font-family: "KIKOPro";
-    src: url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b32.woff2") format("woff2"),
-         url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b37.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  html,
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #000 !important;
-    overflow-x: hidden !important;
-  }
-
-  .kiko-thankyou-page,
-  .kiko-thankyou-page * {
-    box-sizing: border-box;
-  }
-
-  .kiko-thankyou-page {
-    width: 100vw !important;
-    max-width: none !important;
-    min-width: 100vw !important;
-    min-height: 100vh;
-    margin-left: calc(50% - 50vw) !important;
-    margin-right: calc(50% - 50vw) !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding: 0 !important;
-    background:
-      radial-gradient(circle at 50% 42%, rgba(255, 143, 205, 0.18) 0%, rgba(255, 143, 205, 0.06) 28%, transparent 56%),
-      radial-gradient(circle at 80% 88%, rgba(255, 196, 225, 0.08) 0%, transparent 34%),
-      #000;
-    color: #fff;
-    font-family: "KIKOPro", Arial, Helvetica, sans-serif;
-    overflow: hidden;
-  }
-
-  .kiko-thankyou-bars {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: visible;
-    background: #050505;
-    position: relative;
-    z-index: 10;
-  }
-
-  .kiko-thankyou-brand-bar {
-    width: 100%;
-    height: clamp(78px, 8.2vw, 94px);
-    background: #050505;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: visible;
-    position: relative;
-    padding: 0 clamp(6px, 1.4vw, 18px);
-  }
-
-  .kiko-thankyou-logo-wrap {
-    height: clamp(78px, 8.2vw, 94px);
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: visible;
-  }
-
-  .kiko-thankyou-logo-img {
-    display: block;
-    width: clamp(170px, 18vw, 250px);
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-    transform: scale(0.58);
-    transform-origin: left center;
-  }
-
-  .kiko-thankyou-nxtgen-img {
-    display: block;
-    width: clamp(170px, 18vw, 250px) !important;
-    height: auto !important;
-    max-width: none !important;
-    object-fit: contain;
-    transform: scale(0.58);
-    transform-origin: right center;
-    z-index: 4;
-  }
-
-  .kiko-thankyou-hero {
-    min-height: calc(100vh - clamp(78px, 8.2vw, 94px));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 54px 22px 70px;
-  }
-
-  .kiko-thankyou-card {
-    width: min(760px, 100%);
-    min-height: 430px;
-    padding: 58px 42px 54px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
-      rgba(0, 0, 0, 0.72);
-    box-shadow:
-      0 24px 70px rgba(0, 0, 0, 0.6),
-      0 0 40px rgba(255, 143, 205, 0.14);
-    text-align: center;
-    position: relative;
-  }
-
-  .kiko-thankyou-card::before {
-    content: "";
-    position: absolute;
-    inset: 14px;
-    border: 1px solid rgba(255, 143, 205, 0.28);
-    pointer-events: none;
-  }
-
-  .kiko-thankyou-small-label {
-    margin: 0 auto 22px;
-    color: #ff9acc;
-    font-size: 15px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .kiko-thankyou-card h1 {
-    margin: 0;
-    font-family: "KIKOPro", Arial, Helvetica, sans-serif;
-    font-size: clamp(54px, 7vw, 96px);
-    line-height: 0.95;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    color: #fff;
-    text-transform: uppercase;
-    text-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
-  }
-
-  .kiko-thankyou-line {
-    width: 58px;
-    height: 2.5px;
-    background: #ff9acc;
-    margin: 28px auto 28px;
-  }
-
-  .kiko-thankyou-main {
-    margin: 0 auto 16px;
-    max-width: 560px;
-    font-size: 22px;
-    line-height: 1.35;
-    color: rgba(255, 255, 255, 0.94);
-  }
-
-  .kiko-thankyou-pink {
-    margin: 0 auto 22px;
-    max-width: 600px;
-    font-size: 18px;
-    line-height: 1.45;
-    color: #ff9acc;
-  }
-
-  .kiko-thankyou-note {
-    margin: 0 auto;
-    max-width: 520px;
-    font-size: 15px;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.72);
-  }
-
-  @media (max-width: 768px) {
-    .kiko-thankyou-brand-bar {
-      height: 76px;
-      padding: 0 8px;
+    function hideLoading() {
+      loadingEl.classList.add("is-hidden");
     }
 
-    .kiko-thankyou-logo-wrap {
-      height: 76px;
+    function showLoading(message) {
+      if (message) {
+        loadingEl.textContent = message;
+      }
+
+      loadingEl.classList.remove("is-hidden");
     }
 
-    .kiko-thankyou-logo-img {
-      width: clamp(150px, 30vw, 220px);
-      transform: scale(0.58);
+    function showError(message) {
+      hideLoading();
+
+      if (message) {
+        errorEl.textContent = message;
+      }
+
+      errorEl.classList.add("is-visible");
     }
 
-    .kiko-thankyou-nxtgen-img {
-      width: clamp(150px, 30vw, 220px) !important;
-      transform: scale(0.58);
+    function updateLookUI() {
+      const look = kikoLooks[currentLookIndex];
+
+      selectedKikoLook = look.messageName;
+
+      if (lookNameEl) {
+        lookNameEl.textContent = look.name;
+      }
+
+      lookDots.forEach(function(dot, index) {
+        if (index === currentLookIndex) {
+          dot.classList.add("is-active");
+        } else {
+          dot.classList.remove("is-active");
+        }
+      });
     }
 
-    .kiko-thankyou-hero {
-      min-height: calc(100vh - 76px);
-    }
-  }
+    async function applyBeautyPresetByIndex(index) {
+      if (!beautyInstance || isChangingLook) {
+        return;
+      }
 
-  @media (max-width: 560px) {
-    .kiko-thankyou-brand-bar {
-      height: 76px;
-      padding: 0 6px;
-    }
+      isChangingLook = true;
+      currentLookIndex = (index + kikoLooks.length) % kikoLooks.length;
 
-    .kiko-thankyou-logo-wrap {
-      height: 76px;
-    }
+      const look = kikoLooks[currentLookIndex];
 
-    .kiko-thankyou-logo-img {
-      width: 175px;
-      transform: scale(0.58);
-    }
+      updateLookUI();
 
-    .kiko-thankyou-nxtgen-img {
-      width: 175px !important;
-      transform: scale(0.58);
-    }
-
-    .kiko-thankyou-hero {
-      min-height: calc(100vh - 76px);
-      padding: 36px 16px 52px;
+      try {
+        showLoading("Loading " + look.name + "...");
+        await beautyInstance.reset();
+        await beautyInstance.importPreset(look.preset);
+        hideLoading();
+      } catch (error) {
+        console.error("Could not switch DeepAR Beauty preset:", error);
+        showError("This KIKO look could not load. Open Console and send the red error text.");
+      } finally {
+        isChangingLook = false;
+      }
     }
 
-    .kiko-thankyou-card {
-      min-height: 390px;
-      padding: 46px 22px 42px;
+    async function initDeepARBeauty() {
+      try {
+        if (!KIKO_LICENSE_KEY || KIKO_LICENSE_KEY === "PASTE_YOUR_DEEPAR_WEB_LICENSE_KEY_HERE") {
+          showError("Add your DeepAR Web license key inside index.html first.");
+          return;
+        }
+
+        deepARInstance = await window.deepar.initialize({
+          licenseKey: KIKO_LICENSE_KEY,
+          previewElement: previewEl
+        });
+
+        beautyInstance = await Beauty.initializeBeauty(
+          deepARInstance,
+          BEAUTY_LIBRARY_PATH
+        );
+
+        updateLookUI();
+
+        showLoading("Loading PINK GLOW...");
+        await beautyInstance.reset();
+        await beautyInstance.importPreset(kikoLooks[0].preset);
+
+        hideLoading();
+      } catch (error) {
+        console.error("DeepAR Beauty failed to initialize:", error);
+        showError("DeepAR Beauty could not start. Open Console and send the red error text.");
+      }
     }
 
-    .kiko-thankyou-card::before {
-      inset: 10px;
-    }
+    prevLookBtn.addEventListener("click", function() {
+      applyBeautyPresetByIndex(currentLookIndex - 1);
+    });
 
-    .kiko-thankyou-small-label {
-      font-size: 12px;
-      margin-bottom: 18px;
-    }
+    nextLookBtn.addEventListener("click", function() {
+      applyBeautyPresetByIndex(currentLookIndex + 1);
+    });
 
-    .kiko-thankyou-card h1 {
-      font-size: 52px;
-    }
+    startQuizBtn.addEventListener("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
 
-    .kiko-thankyou-line {
-      margin: 22px auto 22px;
-    }
+      startQuizBtn.classList.add("is-selected");
 
-    .kiko-thankyou-main {
-      font-size: 18px;
-    }
+      try {
+        window.parent.postMessage({
+          type: "KIKO_DEEPAR_DONE",
+          selectedLook: selectedKikoLook
+        }, "*");
+      } catch (error) {}
 
-    .kiko-thankyou-pink {
-      font-size: 15px;
-    }
+      window.location.hash = "kiko-filter-done";
+    });
 
-    .kiko-thankyou-note {
-      font-size: 13px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .kiko-thankyou-brand-bar {
-      height: 76px;
-      padding: 0 4px;
-    }
-
-    .kiko-thankyou-logo-wrap {
-      height: 76px;
-    }
-
-    .kiko-thankyou-logo-img {
-      width: 165px;
-      transform: scale(0.56);
-    }
-
-    .kiko-thankyou-nxtgen-img {
-      width: 165px !important;
-      transform: scale(0.56);
-    }
-  }
-</style>
+    window.addEventListener("load", initDeepARBeauty);
+  </script>
+</body>
+</html>
