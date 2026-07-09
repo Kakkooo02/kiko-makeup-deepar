@@ -79,17 +79,18 @@
 
     .kiko-camera-nxtgen {
       display: block;
-      width: clamp(82px, 8vw, 118px) !important;
+      width: clamp(74px, 7vw, 105px) !important;
       height: auto !important;
       max-width: none !important;
       object-fit: contain;
-      position: absolute;
-      right: clamp(14px, 2.6vw, 34px);
-      bottom: 8px;
+      position: fixed;
+      right: clamp(14px, 2vw, 24px);
+      bottom: clamp(12px, 2vw, 22px);
       top: auto;
       transform: none;
-      transform-origin: right center;
-      z-index: 4;
+      transform-origin: right bottom;
+      z-index: 999999;
+      pointer-events: none;
     }
 
     .kiko-camera-hero {
@@ -463,9 +464,9 @@
       }
 
       .kiko-camera-nxtgen {
-        width: clamp(74px, 15vw, 105px) !important;
-        right: 16px;
-        bottom: 8px;
+        width: clamp(68px, 12vw, 92px) !important;
+        right: 14px;
+        bottom: 12px;
         transform: none;
       }
     }
@@ -482,9 +483,9 @@
       }
 
       .kiko-camera-nxtgen {
-        width: 78px !important;
-        right: 12px;
-        bottom: 9px;
+        width: 70px !important;
+        right: 10px;
+        bottom: 10px;
         transform: none;
       }
 
@@ -589,8 +590,8 @@
       }
 
       .kiko-camera-nxtgen {
-        width: 72px !important;
-        right: 10px;
+        width: 64px !important;
+        right: 9px;
         bottom: 9px;
         transform: none;
       }
