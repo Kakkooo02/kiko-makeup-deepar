@@ -631,11 +631,11 @@
             <div id="deepar-preview"></div>
 
             <div id="kikoLoading" class="kiko-loading">
-              Opening camera and loading your KIKO look...
+              Loading
             </div>
 
             <div id="kikoError" class="kiko-error">
-              Camera could not start. Please check camera permission, refresh the page, and try again.
+              Loading
             </div>
           </div>
         </div>
@@ -725,20 +725,12 @@
     }
 
     function showLoading(message) {
-      if (message) {
-        loadingEl.textContent = message;
-      }
-
+      loadingEl.textContent = "Loading";
       loadingEl.classList.remove("is-hidden");
     }
 
     function showError(message) {
-      hideLoading();
-
-      if (message) {
-        errorEl.textContent = message;
-      }
-
+      errorEl.textContent = "Loading";
       errorEl.classList.add("is-visible");
     }
 
@@ -773,13 +765,13 @@
       updateLookUI();
 
       try {
-        showLoading("Loading " + look.name + "...");
+        showLoading("Loading");
         await beautyInstance.reset();
         await beautyInstance.importPreset(look.preset);
         hideLoading();
       } catch (error) {
         console.error("Could not switch DeepAR Beauty preset:", error);
-        showError("This KIKO look could not load. Open Console and send the red error text.");
+        showError("Loading");
       } finally {
         isChangingLook = false;
       }
@@ -788,7 +780,7 @@
     async function initDeepARBeauty() {
       try {
         if (!KIKO_LICENSE_KEY || KIKO_LICENSE_KEY === "PASTE_YOUR_DEEPAR_WEB_LICENSE_KEY_HERE") {
-          showError("Add your DeepAR Web license key inside index.html first.");
+          showError("Loading");
           return;
         }
 
@@ -804,14 +796,14 @@
 
         updateLookUI();
 
-        showLoading("Loading PINK GLOW...");
+        showLoading("Loading");
         await beautyInstance.reset();
         await beautyInstance.importPreset(kikoLooks[0].preset);
 
         hideLoading();
       } catch (error) {
         console.error("DeepAR Beauty failed to initialize:", error);
-        showError("DeepAR Beauty could not start. Open Console and send the red error text.");
+        showError("Loading");
       }
     }
 
