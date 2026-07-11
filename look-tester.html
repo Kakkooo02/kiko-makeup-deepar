@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+  <title>KIKO Look Tester</title>
+
+  <style>
+    @font-face {
+      font-family: "KIKOPro";
+      src: url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b32.woff2") format("woff2"),
+           url("https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a42154889d9cd8dc2271b37.woff") format("woff");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #050505;
+      color: #ffffff;
+      overflow: hidden;
+      font-family: "KIKOPro", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .kiko-page {
+      width: 100vw;
+      height: 100vh;
+      background: #050505;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .kiko-header {
+      width: 100%;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      background: #050505;
+      flex-shrink: 0;
+    }
+
+    .kiko-logo {
+      width: 190px;
+      height: auto;
+      display: block;
+    }
+
+    .kiko-main {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 10px 16px 18px;
+    }
+
+    .kiko-camera-wrap {
+      width: min(430px, 94vw);
+      height: min(560px, calc(100vh - 195px));
+      min-height: 390px;
+      background: #111111;
+      border: 2px solid rgba(255, 255, 255, 0.65);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+    }
+
+    #deepar-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #111111;
+    }
+
+    .kiko-loading {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      background: #111111;
+      color: #ffffff;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .kiko-loading.is-hidden {
+      display: none;
+    }
+
+    .kiko-controls {
+      width: min(430px, 94vw);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      flex-shrink: 0;
+    }
+
+    .kiko-arrow {
+      width: 48px;
+      height: 48px;
+      border: 1.5px solid #ffffff;
+      border-radius: 50%;
+      background: transparent;
+      color: #ffffff;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .kiko-arrow:hover {
+      background: #ffffff;
+      color: #050505;
+      transform: translateY(-1px);
+    }
+
+    .kiko-look-info {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+    }
+
+    .kiko-look-name {
+      margin: 0;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kiko-look-count {
+      margin: 5px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .kiko-dots {
+      width: min(430px, 94vw);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      max-height: 46px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .kiko-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 0;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+    }
+
+    .kiko-dot.is-active {
+      background: #ffffff;
+      transform: scale(1.25);
+    }
+
+    .kiko-error {
+      width: min(430px, 94vw);
+      margin-top: 10px;
+      display: none;
+      color: #ffb3c9;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .kiko-error.is-visible {
+      display: block;
+    }
+
+    @media (max-width: 560px) {
+      .kiko-header {
+        height: 58px;
+        padding: 7px 14px;
+      }
+
+      .kiko-logo {
+        width: 170px;
+      }
+
+      .kiko-main {
+        padding: 8px 12px 14px;
+      }
+
+      .kiko-camera-wrap {
+        width: min(390px, 94vw);
+        height: min(515px, calc(100vh - 180px));
+        min-height: 360px;
+      }
+
+      .kiko-controls {
+        width: min(390px, 94vw);
+        margin-top: 12px;
+      }
+
+      .kiko-arrow {
+        width: 44px;
+        height: 44px;
+        font-size: 26px;
+      }
+
+      .kiko-look-name {
+        font-size: 16px;
+      }
+
+      .kiko-dots {
+        width: min(390px, 94vw);
+        gap: 6px;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-height: 680px) {
+      .kiko-header {
+        height: 50px;
+      }
+
+      .kiko-logo {
+        width: 155px;
+      }
+
+      .kiko-camera-wrap {
+        height: min(445px, calc(100vh - 160px));
+        min-height: 315px;
+      }
+
+      .kiko-controls {
+        margin-top: 9px;
+      }
+
+      .kiko-dots {
+        margin-top: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="kiko-page">
+    <header class="kiko-header">
+      <img
+        class="kiko-logo"
+        src="https://assets.cdn.filesafe.space/WggtB0AJHvPxcA04j12p/media/6a40e817d50c4ff184266c94.png"
+        alt="KIKO Milano"
+      >
+    </header>
+
+    <main class="kiko-main">
+      <div class="kiko-camera-wrap">
+        <canvas id="deepar-canvas"></canvas>
+
+        <div id="kikoLoading" class="kiko-loading">
+          Opening camera...
+        </div>
+      </div>
+
+      <div class="kiko-controls">
+        <button id="kikoPrev" class="kiko-arrow" type="button" aria-label="Previous look">
+          ‹
+        </button>
+
+        <div class="kiko-look-info">
+          <p id="kikoLookName" class="kiko-look-name">Loading look...</p>
+          <p id="kikoLookCount" class="kiko-look-count">0 / 0</p>
+        </div>
+
+        <button id="kikoNext" class="kiko-arrow" type="button" aria-label="Next look">
+          ›
+        </button>
+      </div>
+
+      <div id="kikoDots" class="kiko-dots"></div>
+
+      <div id="kikoError" class="kiko-error"></div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/deepar/js/deepar.js"></script>
+
+  <script type="module">
+    import * as Beauty from "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/beauty-deepar.esm.js";
+
+    const KIKO_DEEPAR_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
+
+    const kikoLooks = [
+      {
+        name: "After Dark",
+        file: "makeup/after-dark.zip"
+      },
+      {
+        name: "Black Hearts",
+        file: "makeup/black-hearts.zip"
+      },
+      {
+        name: "Caramel Kiss",
+        file: "makeup/caramel-kiss.zip"
+      },
+      {
+        name: "Cateye Maple",
+        file: "makeup/cateye-maple.zip"
+      },
+      {
+        name: "Cute",
+        file: "makeup/cute.zip"
+      },
+      {
+        name: "Gelid Breeze",
+        file: "makeup/gelid-breeze.zip"
+      },
+      {
+        name: "Happy Tears",
+        file: "makeup/happy-tears.zip"
+      },
+      {
+        name: "Kim Classic",
+        file: "makeup/kim-classic.zip"
+      },
+      {
+        name: "Lash Delight",
+        file: "makeup/lash-delight.zip"
+      },
+      {
+        name: "Midnight Stunner",
+        file: "makeup/midnight-stunner.zip"
+      },
+      {
+        name: "Misty Enchantment",
+        file: "makeup/misty-enchantment.zip"
+      },
+      {
+        name: "Night Out",
+        file: "makeup/night-out.zip"
+      },
+      {
+        name: "Skyline Glamour Stripes",
+        file: "makeup/skyline-glamour-stripes.zip"
+      },
+      {
+        name: "Spring Petals",
+        file: "makeup/spring-petals.zip"
+      },
+      {
+        name: "Starry Night Seduction",
+        file: "makeup/starry-night-seduction.zip"
+      },
+      {
+        name: "Twilight Hues",
+        file: "makeup/twilight-hues.zip"
+      }
+    ];
+
+    let kikoDeepAR = null;
+    let kikoBeauty = null;
+    let kikoCurrentLookIndex = 0;
+    let kikoIsChangingLook = false;
+    let kikoTouchStartX = 0;
+    let kikoTouchEndX = 0;
+
+    const kikoCanvas = document.getElementById("deepar-canvas");
+    const kikoLoading = document.getElementById("kikoLoading");
+    const kikoError = document.getElementById("kikoError");
+    const kikoLookName = document.getElementById("kikoLookName");
+    const kikoLookCount = document.getElementById("kikoLookCount");
+    const kikoDots = document.getElementById("kikoDots");
+    const kikoPrev = document.getElementById("kikoPrev");
+    const kikoNext = document.getElementById("kikoNext");
+
+    function kikoShowLoading(message) {
+      kikoLoading.textContent = message || "Loading...";
+      kikoLoading.classList.remove("is-hidden");
+    }
+
+    function kikoHideLoading() {
+      kikoLoading.classList.add("is-hidden");
+    }
+
+    function kikoShowError(message) {
+      kikoError.textContent = message || "Something went wrong.";
+      kikoError.classList.add("is-visible");
+    }
+
+    function kikoClearError() {
+      kikoError.textContent = "";
+      kikoError.classList.remove("is-visible");
+    }
+
+    function kikoBuildDots() {
+      kikoDots.innerHTML = "";
+
+      kikoLooks.forEach(function (look, index) {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "kiko-dot";
+        dot.setAttribute("aria-label", "Open " + look.name);
+        dot.addEventListener("click", function () {
+          kikoGoToLook(index);
+        });
+
+        kikoDots.appendChild(dot);
+      });
+    }
+
+    function kikoUpdateLookText() {
+      const currentLook = kikoLooks[kikoCurrentLookIndex];
+
+      kikoLookName.textContent = currentLook ? currentLook.name : "No look";
+      kikoLookCount.textContent = (kikoCurrentLookIndex + 1) + " / " + kikoLooks.length;
+
+      const dots = Array.from(document.querySelectorAll(".kiko-dot"));
+
+      dots.forEach(function (dot, index) {
+        if (index === kikoCurrentLookIndex) {
+          dot.classList.add("is-active");
+        } else {
+          dot.classList.remove("is-active");
+        }
+      });
+    }
+
+    async function kikoApplyLook(index) {
+      if (!kikoBeauty || !kikoLooks[index]) {
+        return;
+      }
+
+      if (kikoIsChangingLook) {
+        return;
+      }
+
+      kikoIsChangingLook = true;
+      kikoClearError();
+
+      const look = kikoLooks[index];
+
+      try {
+        kikoShowLoading("Loading " + look.name + "...");
+
+        await kikoBeauty.switchMakeup(look.file);
+
+        kikoCurrentLookIndex = index;
+        kikoUpdateLookText();
+        kikoHideLoading();
+      } catch (error) {
+        console.error("KIKO look error:", error);
+        kikoShowError("This look could not load: " + look.name);
+        kikoHideLoading();
+      }
+
+      kikoIsChangingLook = false;
+    }
+
+    function kikoGoToLook(index) {
+      let newIndex = index;
+
+      if (newIndex < 0) {
+        newIndex = kikoLooks.length - 1;
+      }
+
+      if (newIndex >= kikoLooks.length) {
+        newIndex = 0;
+      }
+
+      kikoApplyLook(newIndex);
+    }
+
+    function kikoNextLook() {
+      kikoGoToLook(kikoCurrentLookIndex + 1);
+    }
+
+    function kikoPreviousLook() {
+      kikoGoToLook(kikoCurrentLookIndex - 1);
+    }
+
+    async function kikoStartDeepAR() {
+      try {
+        kikoShowLoading("Opening camera...");
+        kikoBuildDots();
+        kikoUpdateLookText();
+
+        kikoDeepAR = await deepar.initialize({
+          licenseKey: KIKO_DEEPAR_LICENSE_KEY,
+          canvas: kikoCanvas,
+          additionalOptions: {
+            cameraConfig: {
+              facingMode: "user"
+            }
+          }
+        });
+
+        await kikoDeepAR.startCamera();
+
+        kikoBeauty = new Beauty.Beauty(kikoDeepAR, {
+          path: "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
+        });
+
+        await kikoApplyLook(0);
+      } catch (error) {
+        console.error("KIKO DeepAR init error:", error);
+        kikoShowLoading("Camera could not open.");
+        kikoShowError("Camera could not open. Please check camera permission, then refresh the page.");
+      }
+    }
+
+    kikoPrev.addEventListener("click", kikoPreviousLook);
+    kikoNext.addEventListener("click", kikoNextLook);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft") {
+        kikoPreviousLook();
+      }
+
+      if (event.key === "ArrowRight") {
+        kikoNextLook();
+      }
+    });
+
+    kikoCanvas.addEventListener("touchstart", function (event) {
+      if (!event.touches || !event.touches.length) {
+        return;
+      }
+
+      kikoTouchStartX = event.touches[0].clientX;
+      kikoTouchEndX = kikoTouchStartX;
+    }, { passive: true });
+
+    kikoCanvas.addEventListener("touchmove", function (event) {
+      if (!event.touches || !event.touches.length) {
+        return;
+      }
+
+      kikoTouchEndX = event.touches[0].clientX;
+    }, { passive: true });
+
+    kikoCanvas.addEventListener("touchend", function () {
+      const swipeDistance = kikoTouchEndX - kikoTouchStartX;
+
+      if (Math.abs(swipeDistance) < 45) {
+        return;
+      }
+
+      if (swipeDistance < 0) {
+        kikoNextLook();
+      } else {
+        kikoPreviousLook();
+      }
+    });
+
+    kikoStartDeepAR();
+  </script>
+</body>
+</html>
