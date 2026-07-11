@@ -99,10 +99,11 @@
       justify-content: center;
       padding: 24px;
       text-align: center;
-      background: #111111;
+      background: rgba(17, 17, 17, 0.88);
       color: #ffffff;
       font-size: 16px;
       line-height: 1.4;
+      pointer-events: none;
     }
 
     .kiko-loading.is-hidden {
@@ -329,67 +330,67 @@
     const kikoLooks = [
       {
         name: "After Dark",
-        file: "makeup/after-dark.zip"
+        file: "./makeup/after-dark.zip"
       },
       {
         name: "Black Hearts",
-        file: "makeup/black-hearts.zip"
+        file: "./makeup/black-hearts.zip"
       },
       {
         name: "Caramel Kiss",
-        file: "makeup/caramel-kiss.zip"
+        file: "./makeup/caramel-kiss.zip"
       },
       {
         name: "Cateye Maple",
-        file: "makeup/cateye-maple.zip"
+        file: "./makeup/cateye-maple.zip"
       },
       {
         name: "Cute",
-        file: "makeup/cute.zip"
+        file: "./makeup/cute.zip"
       },
       {
         name: "Gelid Breeze",
-        file: "makeup/gelid-breeze.zip"
+        file: "./makeup/gelid-breeze.zip"
       },
       {
         name: "Happy Tears",
-        file: "makeup/happy-tears.zip"
+        file: "./makeup/happy-tears.zip"
       },
       {
         name: "Kim Classic",
-        file: "makeup/kim-classic.zip"
+        file: "./makeup/kim-classic.zip"
       },
       {
         name: "Lash Delight",
-        file: "makeup/lash-delight.zip"
+        file: "./makeup/lash-delight.zip"
       },
       {
         name: "Midnight Stunner",
-        file: "makeup/midnight-stunner.zip"
+        file: "./makeup/midnight-stunner.zip"
       },
       {
         name: "Misty Enchantment",
-        file: "makeup/misty-enchantment.zip"
+        file: "./makeup/misty-enchantment.zip"
       },
       {
         name: "Night Out",
-        file: "makeup/night-out.zip"
+        file: "./makeup/night-out.zip"
       },
       {
         name: "Skyline Glamour Stripes",
-        file: "makeup/skyline-glamour-stripes.zip"
+        file: "./makeup/skyline-glamour-stripes.zip"
       },
       {
         name: "Spring Petals",
-        file: "makeup/spring-petals.zip"
+        file: "./makeup/spring-petals.zip"
       },
       {
         name: "Starry Night Seduction",
-        file: "makeup/starry-night-seduction.zip"
+        file: "./makeup/starry-night-seduction.zip"
       },
       {
         name: "Twilight Hues",
-        file: "makeup/twilight-hues.zip"
+        file: "./makeup/twilight-hues.zip"
       }
     ];
 
@@ -461,6 +462,45 @@
       });
     }
 
+    async function kikoCreateBeautyModule() {
+      if (Beauty && typeof Beauty.Beauty === "function") {
+        return new Beauty.Beauty(kikoDeepAR, {
+          path: "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
+        });
+      }
+
+      if (Beauty && typeof Beauty.initialize === "function") {
+        return await Beauty.initialize(kikoDeepAR, {
+          path: "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
+        });
+      }
+
+      throw new Error("Beauty module could not be created.");
+    }
+
+    async function kikoSwitchMakeup(file) {
+      if (!kikoBeauty) {
+        throw new Error("Beauty module is not ready.");
+      }
+
+      if (typeof kikoBeauty.switchMakeup === "function") {
+        await kikoBeauty.switchMakeup(file);
+        return;
+      }
+
+      if (typeof kikoBeauty.setMakeup === "function") {
+        await kikoBeauty.setMakeup(file);
+        return;
+      }
+
+      if (typeof kikoBeauty.loadMakeup === "function") {
+        await kikoBeauty.loadMakeup(file);
+        return;
+      }
+
+      throw new Error("No makeup switch function found.");
+    }
+
     async function kikoApplyLook(index) {
       if (!kikoBeauty || !kikoLooks[index]) {
         return;
@@ -478,15 +518,19 @@
       try {
         kikoShowLoading("Loading " + look.name + "...");
 
-        await kikoBeauty.switchMakeup(look.file);
+        await kikoSwitchMakeup(look.file);
 
         kikoCurrentLookIndex = index;
         kikoUpdateLookText();
         kikoHideLoading();
       } catch (error) {
         console.error("KIKO look error:", error);
-        kikoShowError("This look could not load: " + look.name);
+
+        kikoCurrentLookIndex = index;
+        kikoUpdateLookText();
         kikoHideLoading();
+
+        kikoShowError("This look could not load: " + look.name + ". Try the next arrow.");
       }
 
       kikoIsChangingLook = false;
@@ -515,10 +559,11 @@
     }
 
     async function kikoStartDeepAR() {
+      kikoBuildDots();
+      kikoUpdateLookText();
+
       try {
         kikoShowLoading("Opening camera...");
-        kikoBuildDots();
-        kikoUpdateLookText();
 
         kikoDeepAR = await deepar.initialize({
           licenseKey: KIKO_DEEPAR_LICENSE_KEY,
@@ -532,16 +577,28 @@
 
         await kikoDeepAR.startCamera();
 
-        kikoBeauty = new Beauty.Beauty(kikoDeepAR, {
-          path: "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
-        });
-
-        await kikoApplyLook(0);
+        kikoHideLoading();
       } catch (error) {
-        console.error("KIKO DeepAR init error:", error);
+        console.error("KIKO camera error:", error);
         kikoShowLoading("Camera could not open.");
         kikoShowError("Camera could not open. Please check camera permission, then refresh the page.");
+        return;
       }
+
+      try {
+        kikoShowLoading("Preparing makeup looks...");
+
+        kikoBeauty = await kikoCreateBeautyModule();
+
+        kikoHideLoading();
+      } catch (error) {
+        console.error("KIKO Beauty module error:", error);
+        kikoHideLoading();
+        kikoShowError("Camera is open, but the makeup module could not load. Check the console error.");
+        return;
+      }
+
+      await kikoApplyLook(0);
     }
 
     kikoPrev.addEventListener("click", kikoPreviousLook);
