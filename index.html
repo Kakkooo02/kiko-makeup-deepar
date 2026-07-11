@@ -646,7 +646,7 @@
           </button>
 
           <div class="kiko-look-info">
-            <div id="kikoLookName" class="kiko-look-name">PINK GLOW</div>
+            <div id="kikoLookName" class="kiko-look-name">EVERYDAY GLOW</div>
 
             <div id="kikoLookDots" class="kiko-look-dots">
               <span class="is-active"></span>
@@ -687,7 +687,7 @@
     let deepARInstance = null;
     let beautyInstance = null;
     let currentLookIndex = 0;
-    let selectedKikoLook = "Pink Glow";
+    let selectedKikoLook = "Everyday Glow";
     let isChangingLook = false;
 
     const KIKO_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
@@ -695,19 +695,19 @@
 
     const kikoLooks = [
       {
-        name: "PINK GLOW",
-        messageName: "Pink Glow",
-        preset: "makeup/spring-petals.zip"
+        name: "EVERYDAY GLOW",
+        messageName: "Everyday Glow",
+        preset: "makeup/everyday.zip"
       },
       {
-        name: "EVERYDAY GLAM",
-        messageName: "Everyday Soft Glam",
-        preset: "makeup/twilight-hues.zip"
+        name: "PLAYFUL POP",
+        messageName: "Playful Pop",
+        preset: "makeup/fun.zip"
       },
       {
-        name: "BOLD GLAM",
-        messageName: "Bold Glam",
-        preset: "makeup/night-out.zip"
+        name: "EVENING GLAM",
+        messageName: "Evening Glam",
+        preset: "makeup/fancy.zip"
       }
     ];
 
@@ -794,6 +794,7 @@
           BEAUTY_LIBRARY_PATH
         );
 
+        currentLookIndex = 0;
         updateLookUI();
 
         showLoading("Loading");
