@@ -73,9 +73,10 @@
     }
 
     .kiko-camera-wrap {
-      width: min(430px, 94vw);
-      height: min(500px, calc(100vh - 190px));
-      min-height: 360px;
+      width: min(420px, 94vw);
+      aspect-ratio: 3 / 4;
+      max-height: calc(100vh - 185px);
+      min-height: 340px;
       background: #111111;
       border: 2px solid rgba(255, 255, 255, 0.65);
       position: relative;
@@ -83,11 +84,21 @@
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
     }
 
-    #deepar-canvas {
+    #deepar-preview {
       width: 100%;
       height: 100%;
       display: block;
       background: #111111;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #deepar-preview canvas,
+    #deepar-preview video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
     }
 
     .kiko-loading {
@@ -111,7 +122,7 @@
     }
 
     .kiko-controls {
-      width: min(430px, 94vw);
+      width: min(420px, 94vw);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -171,7 +182,7 @@
     }
 
     .kiko-dots {
-      width: min(430px, 94vw);
+      width: min(420px, 94vw);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -199,7 +210,7 @@
     }
 
     .kiko-error {
-      width: min(430px, 94vw);
+      width: min(420px, 94vw);
       margin-top: 10px;
       display: none;
       color: #ffb3c9;
@@ -229,8 +240,8 @@
 
       .kiko-camera-wrap {
         width: min(390px, 94vw);
-        height: min(465px, calc(100vh - 175px));
-        min-height: 345px;
+        max-height: calc(100vh - 170px);
+        min-height: 330px;
       }
 
       .kiko-controls {
@@ -265,8 +276,8 @@
       }
 
       .kiko-camera-wrap {
-        height: min(405px, calc(100vh - 155px));
-        min-height: 300px;
+        max-height: calc(100vh - 150px);
+        min-height: 290px;
       }
 
       .kiko-controls {
@@ -292,7 +303,7 @@
 
     <main class="kiko-main">
       <div id="kikoCameraWrap" class="kiko-camera-wrap">
-        <canvas id="deepar-canvas"></canvas>
+        <div id="deepar-preview"></div>
 
         <div id="kikoLoading" class="kiko-loading">
           Opening camera...
@@ -327,72 +338,70 @@
 
     const KIKO_DEEPAR_LICENSE_KEY = "9263700f407cbd9d08ad1b6ec5b0afbf10735752e74c8e0d5e1d58eca969e0fb4286d19c9d6dcee3";
 
-    const KIKO_BASE_URL = "https://kakkooo02.github.io/kiko-makeup-deepar/";
-
     const kikoLooks = [
       {
         name: "Spring Petals",
-        file: KIKO_BASE_URL + "makeup/spring-petals.zip"
+        file: "./makeup/spring-petals.zip"
       },
       {
         name: "Twilight Hues",
-        file: KIKO_BASE_URL + "makeup/twilight-hues.zip"
+        file: "./makeup/twilight-hues.zip"
       },
       {
         name: "Night Out",
-        file: KIKO_BASE_URL + "makeup/night-out.zip"
+        file: "./makeup/night-out.zip"
       },
       {
         name: "After Dark",
-        file: KIKO_BASE_URL + "makeup/after-dark.zip"
+        file: "./makeup/after-dark.zip"
       },
       {
         name: "Black Hearts",
-        file: KIKO_BASE_URL + "makeup/black-hearts.zip"
+        file: "./makeup/black-hearts.zip"
       },
       {
         name: "Caramel Kiss",
-        file: KIKO_BASE_URL + "makeup/caramel-kiss.zip"
+        file: "./makeup/caramel-kiss.zip"
       },
       {
         name: "Cateye Maple",
-        file: KIKO_BASE_URL + "makeup/cateye-maple.zip"
+        file: "./makeup/cateye-maple.zip"
       },
       {
         name: "Cute",
-        file: KIKO_BASE_URL + "makeup/cute.zip"
+        file: "./makeup/cute.zip"
       },
       {
         name: "Gelid Breeze",
-        file: KIKO_BASE_URL + "makeup/gelid-breeze.zip"
+        file: "./makeup/gelid-breeze.zip"
       },
       {
         name: "Happy Tears",
-        file: KIKO_BASE_URL + "makeup/happy-tears.zip"
+        file: "./makeup/happy-tears.zip"
       },
       {
         name: "Kim Classic",
-        file: KIKO_BASE_URL + "makeup/kim-classic.zip"
+        file: "./makeup/kim-classic.zip"
       },
       {
         name: "Lash Delight",
-        file: KIKO_BASE_URL + "makeup/lash-delight.zip"
+        file: "./makeup/lash-delight.zip"
       },
       {
         name: "Midnight Stunner",
-        file: KIKO_BASE_URL + "makeup/midnight-stunner.zip"
+        file: "./makeup/midnight-stunner.zip"
       },
       {
         name: "Misty Enchantment",
-        file: KIKO_BASE_URL + "makeup/misty-enchantment.zip"
+        file: "./makeup/misty-enchantment.zip"
       },
       {
         name: "Skyline Glamour Stripes",
-        file: KIKO_BASE_URL + "makeup/skyline-glamour-stripes.zip"
+        file: "./makeup/skyline-glamour-stripes.zip"
       },
       {
         name: "Starry Night Seduction",
-        file: KIKO_BASE_URL + "makeup/starry-night-seduction.zip"
+        file: "./makeup/starry-night-seduction.zip"
       }
     ];
 
@@ -403,8 +412,7 @@
     let kikoTouchStartX = 0;
     let kikoTouchEndX = 0;
 
-    const kikoCameraWrap = document.getElementById("kikoCameraWrap");
-    const kikoCanvas = document.getElementById("deepar-canvas");
+    const kikoPreview = document.getElementById("deepar-preview");
     const kikoLoading = document.getElementById("kikoLoading");
     const kikoError = document.getElementById("kikoError");
     const kikoLookName = document.getElementById("kikoLookName");
@@ -412,25 +420,6 @@
     const kikoDots = document.getElementById("kikoDots");
     const kikoPrev = document.getElementById("kikoPrev");
     const kikoNext = document.getElementById("kikoNext");
-
-    function kikoResizeCanvas() {
-      const rect = kikoCameraWrap.getBoundingClientRect();
-      const pixelRatio = window.devicePixelRatio || 1;
-
-      const canvasWidth = Math.round(rect.width * pixelRatio);
-      const canvasHeight = Math.round(rect.height * pixelRatio);
-
-      if (kikoCanvas.width !== canvasWidth) {
-        kikoCanvas.width = canvasWidth;
-      }
-
-      if (kikoCanvas.height !== canvasHeight) {
-        kikoCanvas.height = canvasHeight;
-      }
-
-      kikoCanvas.style.width = rect.width + "px";
-      kikoCanvas.style.height = rect.height + "px";
-    }
 
     function kikoShowLoading(message) {
       kikoLoading.textContent = message || "Loading...";
@@ -484,25 +473,21 @@
       });
     }
 
-    async function kikoCreateBeautyModule() {
-      kikoBeauty = new Beauty.Beauty(kikoDeepAR, {
-        path: "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
-      });
+    async function kikoInitializeBeauty() {
+      if (!Beauty || typeof Beauty.initializeBeauty !== "function") {
+        throw new Error("Beauty.initializeBeauty is not available.");
+      }
+
+      kikoBeauty = await Beauty.initializeBeauty(
+        kikoDeepAR,
+        "https://cdn.jsdelivr.net/npm/@deepar/beauty/dist/"
+      );
+
+      if (!kikoBeauty || typeof kikoBeauty.importPreset !== "function") {
+        throw new Error("Beauty importPreset is not available.");
+      }
 
       return kikoBeauty;
-    }
-
-    async function kikoSwitchMakeup(file) {
-      if (!kikoBeauty) {
-        throw new Error("Beauty module is not ready.");
-      }
-
-      if (typeof kikoBeauty.switchMakeup === "function") {
-        await kikoBeauty.switchMakeup(file);
-        return;
-      }
-
-      throw new Error("switchMakeup was not found on the Beauty module.");
     }
 
     async function kikoApplyLook(index) {
@@ -522,7 +507,7 @@
       try {
         kikoShowLoading("Loading " + look.name + "...");
 
-        await kikoSwitchMakeup(look.file);
+        await kikoBeauty.importPreset(look.file);
 
         kikoCurrentLookIndex = index;
         kikoUpdateLookText();
@@ -563,7 +548,6 @@
     }
 
     async function kikoStartDeepAR() {
-      kikoResizeCanvas();
       kikoBuildDots();
       kikoUpdateLookText();
 
@@ -572,7 +556,7 @@
 
         kikoDeepAR = await deepar.initialize({
           licenseKey: KIKO_DEEPAR_LICENSE_KEY,
-          canvas: kikoCanvas,
+          previewElement: kikoPreview,
           additionalOptions: {
             cameraConfig: {
               facingMode: "user"
@@ -593,13 +577,13 @@
       try {
         kikoShowLoading("Preparing makeup looks...");
 
-        await kikoCreateBeautyModule();
+        await kikoInitializeBeauty();
 
         kikoHideLoading();
       } catch (error) {
         console.error("KIKO Beauty module error:", error);
         kikoHideLoading();
-        kikoShowError("Camera opened, but the Beauty makeup module could not load.");
+        kikoShowError("Camera opened, but the Beauty makeup module could not load: " + error.message);
         return;
       }
 
@@ -619,7 +603,7 @@
       }
     });
 
-    kikoCanvas.addEventListener("touchstart", function (event) {
+    kikoPreview.addEventListener("touchstart", function (event) {
       if (!event.touches || !event.touches.length) {
         return;
       }
@@ -628,7 +612,7 @@
       kikoTouchEndX = kikoTouchStartX;
     }, { passive: true });
 
-    kikoCanvas.addEventListener("touchmove", function (event) {
+    kikoPreview.addEventListener("touchmove", function (event) {
       if (!event.touches || !event.touches.length) {
         return;
       }
@@ -636,7 +620,7 @@
       kikoTouchEndX = event.touches[0].clientX;
     }, { passive: true });
 
-    kikoCanvas.addEventListener("touchend", function () {
+    kikoPreview.addEventListener("touchend", function () {
       const swipeDistance = kikoTouchEndX - kikoTouchStartX;
 
       if (Math.abs(swipeDistance) < 45) {
@@ -649,18 +633,6 @@
         kikoPreviousLook();
       }
     });
-
-    window.addEventListener("resize", function () {
-      kikoResizeCanvas();
-    });
-
-    if ("ResizeObserver" in window) {
-      const kikoObserver = new ResizeObserver(function () {
-        kikoResizeCanvas();
-      });
-
-      kikoObserver.observe(kikoCameraWrap);
-    }
 
     kikoStartDeepAR();
   </script>
