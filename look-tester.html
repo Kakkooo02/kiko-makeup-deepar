@@ -186,17 +186,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 9px;
       margin-top: 12px;
       flex-wrap: wrap;
-      max-height: 46px;
-      overflow: hidden;
       flex-shrink: 0;
     }
 
     .kiko-dot {
-      width: 7px;
-      height: 7px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       border: 0;
       padding: 0;
@@ -261,7 +259,7 @@
 
       .kiko-dots {
         width: min(390px, 94vw);
-        gap: 6px;
+        gap: 8px;
         margin-top: 10px;
       }
     }
@@ -340,68 +338,16 @@
 
     const kikoLooks = [
       {
-        name: "Spring Petals",
-        file: "./makeup/spring-petals.zip"
+        name: "Fun",
+        file: "./makeup/fun.zip"
       },
       {
-        name: "Twilight Hues",
-        file: "./makeup/twilight-hues.zip"
+        name: "Everyday",
+        file: "./makeup/everyday.zip"
       },
       {
-        name: "Night Out",
-        file: "./makeup/night-out.zip"
-      },
-      {
-        name: "After Dark",
-        file: "./makeup/after-dark.zip"
-      },
-      {
-        name: "Black Hearts",
-        file: "./makeup/black-hearts.zip"
-      },
-      {
-        name: "Caramel Kiss",
-        file: "./makeup/caramel-kiss.zip"
-      },
-      {
-        name: "Cateye Maple",
-        file: "./makeup/cateye-maple.zip"
-      },
-      {
-        name: "Cute",
-        file: "./makeup/cute.zip"
-      },
-      {
-        name: "Gelid Breeze",
-        file: "./makeup/gelid-breeze.zip"
-      },
-      {
-        name: "Happy Tears",
-        file: "./makeup/happy-tears.zip"
-      },
-      {
-        name: "Kim Classic",
-        file: "./makeup/kim-classic.zip"
-      },
-      {
-        name: "Lash Delight",
-        file: "./makeup/lash-delight.zip"
-      },
-      {
-        name: "Midnight Stunner",
-        file: "./makeup/midnight-stunner.zip"
-      },
-      {
-        name: "Misty Enchantment",
-        file: "./makeup/misty-enchantment.zip"
-      },
-      {
-        name: "Skyline Glamour Stripes",
-        file: "./makeup/skyline-glamour-stripes.zip"
-      },
-      {
-        name: "Starry Night Seduction",
-        file: "./makeup/starry-night-seduction.zip"
+        name: "Fancy",
+        file: "./makeup/fancy.zip"
       }
     ];
 
@@ -519,7 +465,7 @@
         kikoUpdateLookText();
         kikoHideLoading();
 
-        kikoShowError("This look could not load: " + look.name + ". Try the next one.");
+        kikoShowError("This look could not load: " + look.name + ". Check that " + look.file + " exists in GitHub.");
       }
 
       kikoIsChangingLook = false;
